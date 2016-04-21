@@ -16,7 +16,8 @@ import dagger.Provides;
 @Module(
         injects = {
                 LaunchActivity.class,
-                LoginFragment.class
+                LoginFragment.class,
+                SignUpFragment.class
         },
         addsTo = com.hardskygames.luckycalories.LuckyCaloriesAppModule.class,
         library = true
