@@ -45,7 +45,12 @@ public class LoginFragment extends ButterKnifeFragment {
     }
 
     @OnFocusChange({R.id.txtEmail, R.id.txtPassword})
-    public void onTextFocusChange(){
+    public void onTextFocusChange(boolean focused){
+        if(focused) //gain focus; we need only 'on lost'
+            return;
+
+        if(txtEmail == null || txtPassword == null)
+            return;
 
         model.setEmail(txtEmail.getText().toString());
         txtPassword.setText(txtPassword.getText().toString());
