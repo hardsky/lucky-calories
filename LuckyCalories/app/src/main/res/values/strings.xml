@@ -9,4 +9,8 @@
     <string name="fragment_login_login">Log In</string>
     <string name="fragment_login_forgot">Forgot Password</string>
     <string name="fragment_login_sign_up">Sign Up</string>
+
+    <string name="fragment_sign_up_name">Name</string>
+    <string name="fragment_sign_up_repeat_password">Repeat password</string>
+
 </resources>
