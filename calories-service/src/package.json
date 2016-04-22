@@ -1,0 +1,16 @@
+{
+  "name": "lucky-calories-api",
+  "version": "1.0.0",
+  "description": "Know your calories",
+  "main": "index.js",
+  "keywords": [
+    "swagger"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "swagger-tools": "0.9.*"
+  }
+}
