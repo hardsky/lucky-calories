@@ -1,0 +1,448 @@
+
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: Lucky Calories API
+  description: Know your calories
+host: localhost:4003
+basePath: /v1
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+################################################################################
+#                                  Security                                    #
+################################################################################
+securityDefinitions:
+  access_token:
+    type: apiKey
+    name: access_token
+    in: header
+security:
+  - access_token: []
+
+# Describe your paths here
+paths:
+  /login:
+    post:
+      tags:
+        - authorization
+        - user interface
+      description: |
+        Authorize user.
+      parameters:
+        - name: info
+          in: body
+          description: User login info in JSON format.
+          schema:
+            $ref: '#/definitions/LoginInfo'
+          required: true
+      responses:
+        200:
+          description: Return access token on success.
+          schema:
+            title: AccessToken
+            type: string
+        403:
+          description: Access denied.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /signup:
+    post:
+      tags:
+        - authorization
+        - user interface
+      description: |
+        Register new user.
+      parameters:
+        - name: info
+          in: body
+          description: User registration info in JSON format.
+          schema:
+            $ref: '#/definitions/SignUpInfo'
+          required: true
+      responses:
+        200:
+          description: Return access token on success.
+          schema:
+            title: AccessToken
+            type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /user/{id}/calories:
+    get:
+      tags:
+        - calories
+        - user interface
+      description: |
+        Get paged calories list.
+        Paged by 100 meals.
+        Ordered by eat time (from now to past (closest to current time is first in list)).
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+        - name: last
+          in: query
+          description: eat time of last meal from previous page
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Callorie list (page).
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Calorie"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+    post:
+      tags:
+        - calories
+        - user interface
+      description: |
+        Add new item to calories list.
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+        - in: body
+          name: body
+          description: Add calorie item to list
+          required: true
+          schema:
+            $ref: "#/definitions/Calorie"
+      responses:
+        200:
+          description: New calorie entry in list.
+          schema:
+            $ref: '#/definitions/Calorie'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+    put:
+      tags:
+        - calories
+        - user interface
+      description: |
+        Update item in calories list.
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+        - in: body
+          name: body
+          description: Changed calorie item
+          required: true
+          schema:
+            $ref: "#/definitions/Calorie"
+      responses:
+        200:
+          description: Updated calorie entry from list.
+          schema:
+            $ref: '#/definitions/Calorie'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+            
+  /user/{id}/calories/{calorieId}:
+    delete:
+      tags:
+        - calories
+      description: |
+        Delete entry from calories list.
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+        - name: calorieId
+          in: path
+          description: entry Id in calorie list
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: Ok
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+
+  /user/{id}:
+    get:
+      tags:
+        - users
+        - user interface
+      description: |
+        Get user info.
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: User info
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+    put:
+      tags:
+        - users
+        - user interface
+      description: |
+        Update user info.
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+        - name: body
+          in: body
+          description: user info
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: User info
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+
+  /manager/users:
+    get:
+      tags:
+        - users
+        - manager interface
+      description: |
+        Get user list.
+        Paged by 100 users.
+        Ordered by alphabeticaly.
+      parameters:
+        - name: last
+          in: query
+          description: last name form user list
+          type: string
+      responses:
+        200:
+          description: List of users.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+    post:
+      tags:
+        - users
+        - manager interface
+      description: |
+        Create new user.
+      parameters:
+        - name: body
+          in: body
+          description: user info
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: New user info.
+          schema:
+            $ref: "#/definitions/User"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+    put:
+      tags:
+        - users
+        - manager interface
+      description: |
+        Update user info.
+      parameters:
+        - name: body
+          in: body
+          description: user info
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: Updated user info.
+          schema:
+            $ref: "#/definitions/User"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+            
+  /manager/users/{id}:
+    delete:
+      tags:
+        - users
+        - manager interface
+      description: |
+        Delete user.
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: Ok
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+
+definitions:
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+
+  LoginInfo:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+        format: password
+        
+  SignUpInfo:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+
+  Calorie:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      meal:
+        type: string
+      note:
+        type: string
+      amount:
+        description: Value in kcal 
+        type: number
+        format: float
+      eatTime:
+        type: integer
+        format: int64
+
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      email:
+        type: string
+      dailyCalories:
+        type: number
+        format: float
+      userType:
+        type: integer
+        format: int32
+        description: |
+          user, manager, admin  
+          User - would only be able to CRUD on his owned records.  
+          Manager - same as User + would able to CRUD users  
+          Admin - same as Manager + would able to CRUD everything
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
