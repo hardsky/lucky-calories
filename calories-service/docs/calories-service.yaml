@@ -27,9 +27,6 @@ security:
 paths:
   /login:
     post:
-      tags:
-        - authorization
-        - user interface
       description: |
         Authorize user.
       operationId: login
@@ -55,9 +52,6 @@ paths:
 
   /signup:
     post:
-      tags:
-        - authorization
-        - user interface
       description: |
         Register new user.
       operationId: signup
@@ -81,9 +75,6 @@ paths:
 
   /user/{id}/calories:
     get:
-      tags:
-        - calories
-        - user interface
       description: |
         Get paged calories list for user.
         Paged by 100 meals.
@@ -115,9 +106,6 @@ paths:
       security:
         - access_token: []
     post:
-      tags:
-        - calories
-        - user interface
       description: |
         Add new item to calories list for user.
       operationId: createUserCalorie
@@ -128,8 +116,8 @@ paths:
           type: integer
           format: int64
           required: true
-        - in: body
-          name: body
+        - name: calorie
+          in: body
           description: Add calorie item to list
           required: true
           schema:
@@ -146,9 +134,6 @@ paths:
       security:
         - access_token: []
     put:
-      tags:
-        - calories
-        - user interface
       description: |
         Update item in calories list for user.
       operationId: updateUserCalorie
@@ -159,8 +144,8 @@ paths:
           type: integer
           format: int64
           required: true
-        - in: body
-          name: body
+        - name: calorie
+          in: body
           description: Changed calorie item
           required: true
           schema:
@@ -179,8 +164,6 @@ paths:
             
   /user/{id}/calories/{calorieId}:
     delete:
-      tags:
-        - calories
       description: |
         Delete entry from calories list for user.
       operationId: deleteUserCalorie
@@ -209,8 +192,6 @@ paths:
 
   /users:
     get:
-      tags:
-        - users
       description: |
         Get user list.
         Paged by 100 users.
@@ -235,14 +216,11 @@ paths:
       security:
         - access_token: []
     post:
-      tags:
-        - users
-        - manager interface
       description: |
         Create new user.
       operationId: createUser
       parameters:
-        - name: body
+        - name: user
           in: body
           description: user info
           required: true
@@ -260,14 +238,11 @@ paths:
       security:
         - access_token: []
     put:
-      tags:
-        - users
-        - manager interface
       description: |
         Update user info.
       operationId: updateUser
       parameters:
-        - name: body
+        - name: user
           in: body
           description: user info
           required: true
@@ -287,9 +262,6 @@ paths:
             
   /users/{id}:
     get:
-      tags:
-        - users
-        - user interface
       description: |
         Get user info.
       operationId: getUser
@@ -312,9 +284,6 @@ paths:
       security:
         - access_token: []
     delete:
-      tags:
-        - users
-        - manager interface
       description: |
         Delete user.
       operationId: deleteUser

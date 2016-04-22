@@ -31,10 +31,6 @@
     "paths": {
         "/login": {
             "post": {
-                "tags": [
-                    "authorization",
-                    "user interface"
-                ],
                 "description": "Authorize user.\n",
                 "operationId": "login",
                 "parameters": [
@@ -70,10 +66,6 @@
         },
         "/signup": {
             "post": {
-                "tags": [
-                    "authorization",
-                    "user interface"
-                ],
                 "description": "Register new user.\n",
                 "operationId": "signup",
                 "parameters": [
@@ -106,10 +98,6 @@
         },
         "/user/{id}/calories": {
             "get": {
-                "tags": [
-                    "calories",
-                    "user interface"
-                ],
                 "description": "Get paged calories list for user.\nPaged by 100 meals.\nOrdered by eat time (from now to past (closest to current time is first in list)).\n",
                 "operationId": "getUserCaloriesList",
                 "parameters": [
@@ -153,10 +141,6 @@
                 ]
             },
             "post": {
-                "tags": [
-                    "calories",
-                    "user interface"
-                ],
                 "description": "Add new item to calories list for user.\n",
                 "operationId": "createUserCalorie",
                 "parameters": [
@@ -169,8 +153,8 @@
                         "required": true
                     },
                     {
+                        "name": "calorie",
                         "in": "body",
-                        "name": "body",
                         "description": "Add calorie item to list",
                         "required": true,
                         "schema": {
@@ -199,10 +183,6 @@
                 ]
             },
             "put": {
-                "tags": [
-                    "calories",
-                    "user interface"
-                ],
                 "description": "Update item in calories list for user.\n",
                 "operationId": "updateUserCalorie",
                 "parameters": [
@@ -215,8 +195,8 @@
                         "required": true
                     },
                     {
+                        "name": "calorie",
                         "in": "body",
-                        "name": "body",
                         "description": "Changed calorie item",
                         "required": true,
                         "schema": {
@@ -247,9 +227,6 @@
         },
         "/user/{id}/calories/{calorieId}": {
             "delete": {
-                "tags": [
-                    "calories"
-                ],
                 "description": "Delete entry from calories list for user.\n",
                 "operationId": "deleteUserCalorie",
                 "parameters": [
@@ -290,9 +267,6 @@
         },
         "/users": {
             "get": {
-                "tags": [
-                    "users"
-                ],
                 "description": "Get user list.\nPaged by 100 users.\nOrdered by alphabeticaly.\n",
                 "operationId": "getUserList",
                 "parameters": [
@@ -327,15 +301,11 @@
                 ]
             },
             "post": {
-                "tags": [
-                    "users",
-                    "manager interface"
-                ],
                 "description": "Create new user.\n",
                 "operationId": "createUser",
                 "parameters": [
                     {
-                        "name": "body",
+                        "name": "user",
                         "in": "body",
                         "description": "user info",
                         "required": true,
@@ -365,15 +335,11 @@
                 ]
             },
             "put": {
-                "tags": [
-                    "users",
-                    "manager interface"
-                ],
                 "description": "Update user info.\n",
                 "operationId": "updateUser",
                 "parameters": [
                     {
-                        "name": "body",
+                        "name": "user",
                         "in": "body",
                         "description": "user info",
                         "required": true,
@@ -405,10 +371,6 @@
         },
         "/users/{id}": {
             "get": {
-                "tags": [
-                    "users",
-                    "user interface"
-                ],
                 "description": "Get user info.\n",
                 "operationId": "getUser",
                 "parameters": [
@@ -442,10 +404,6 @@
                 ]
             },
             "delete": {
-                "tags": [
-                    "users",
-                    "manager interface"
-                ],
                 "description": "Delete user.\n",
                 "operationId": "deleteUser",
                 "parameters": [
