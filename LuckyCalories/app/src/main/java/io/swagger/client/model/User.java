@@ -1,6 +1,6 @@
 package io.swagger.client.model;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -95,16 +95,16 @@ public class User  implements Serializable {
       return false;
     }
     User user = (User) o;
-    return Objects.equals(id, user.id) &&
-        Objects.equals(name, user.name) &&
-        Objects.equals(email, user.email) &&
-        Objects.equals(dailyCalories, user.dailyCalories) &&
-        Objects.equals(userType, user.userType);
+    return Objects.equal(id, user.id) &&
+        Objects.equal(name, user.name) &&
+        Objects.equal(email, user.email) &&
+        Objects.equal(dailyCalories, user.dailyCalories) &&
+        Objects.equal(userType, user.userType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, email, dailyCalories, userType);
+    return Objects.hashCode(id, name, email, dailyCalories, userType);
   }
 
   @Override

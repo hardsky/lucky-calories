@@ -1,6 +1,6 @@
 package io.swagger.client.model;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -95,16 +95,16 @@ public class Calorie  implements Serializable {
       return false;
     }
     Calorie calorie = (Calorie) o;
-    return Objects.equals(id, calorie.id) &&
-        Objects.equals(meal, calorie.meal) &&
-        Objects.equals(note, calorie.note) &&
-        Objects.equals(amount, calorie.amount) &&
-        Objects.equals(eatTime, calorie.eatTime);
+    return Objects.equal(id, calorie.id) &&
+        Objects.equal(meal, calorie.meal) &&
+        Objects.equal(note, calorie.note) &&
+        Objects.equal(amount, calorie.amount) &&
+        Objects.equal(eatTime, calorie.eatTime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, meal, note, amount, eatTime);
+    return Objects.hashCode(id, meal, note, amount, eatTime);
   }
 
   @Override

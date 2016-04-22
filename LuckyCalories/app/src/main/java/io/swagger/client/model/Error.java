@@ -1,6 +1,6 @@
 package io.swagger.client.model;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -52,13 +52,13 @@ public class Error  implements Serializable {
       return false;
     }
     Error error = (Error) o;
-    return Objects.equals(code, error.code) &&
-        Objects.equals(message, error.message);
+    return Objects.equal(code, error.code) &&
+        Objects.equal(message, error.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message);
+    return Objects.hashCode(code, message);
   }
 
   @Override

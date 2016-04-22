@@ -1,6 +1,6 @@
 package io.swagger.client.model;
 
-import java.util.Objects;
+import com.google.common.base.Objects;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -52,13 +52,13 @@ public class LoginInfo  implements Serializable {
       return false;
     }
     LoginInfo loginInfo = (LoginInfo) o;
-    return Objects.equals(email, loginInfo.email) &&
-        Objects.equals(password, loginInfo.password);
+    return Objects.equal(email, loginInfo.email) &&
+        Objects.equal(password, loginInfo.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(email, password);
+    return Objects.hashCode(email, password);
   }
 
   @Override
