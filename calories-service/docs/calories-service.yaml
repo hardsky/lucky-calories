@@ -7,16 +7,14 @@ info:
   title: Lucky Calories API
   description: Know your calories
 host: localhost:4003
-basePath: /v1
+basePath: /api/v1
 schemes:
   - http
 produces:
   - application/json
 consumes:
   - application/json
-################################################################################
-#                                  Security                                    #
-################################################################################
+  
 securityDefinitions:
   access_token:
     type: apiKey
@@ -34,6 +32,7 @@ paths:
         - user interface
       description: |
         Authorize user.
+      operationId: login
       parameters:
         - name: info
           in: body
@@ -61,6 +60,7 @@ paths:
         - user interface
       description: |
         Register new user.
+      operationId: signup
       parameters:
         - name: info
           in: body
@@ -85,9 +85,10 @@ paths:
         - calories
         - user interface
       description: |
-        Get paged calories list.
+        Get paged calories list for user.
         Paged by 100 meals.
         Ordered by eat time (from now to past (closest to current time is first in list)).
+      operationId: getUserCaloriesList
       parameters:
         - name: id
           in: path
@@ -118,7 +119,8 @@ paths:
         - calories
         - user interface
       description: |
-        Add new item to calories list.
+        Add new item to calories list for user.
+      operationId: createUserCalorie
       parameters:
         - name: id
           in: path
@@ -134,7 +136,7 @@ paths:
             $ref: "#/definitions/Calorie"
       responses:
         200:
-          description: New calorie entry in list.
+          description: New calorie entry in list for user.
           schema:
             $ref: '#/definitions/Calorie'
         default:
@@ -148,7 +150,8 @@ paths:
         - calories
         - user interface
       description: |
-        Update item in calories list.
+        Update item in calories list for user.
+      operationId: updateUserCalorie
       parameters:
         - name: id
           in: path
@@ -179,7 +182,8 @@ paths:
       tags:
         - calories
       description: |
-        Delete entry from calories list.
+        Delete entry from calories list for user.
+      operationId: deleteUserCalorie
       parameters:
         - name: id
           in: path
@@ -203,71 +207,15 @@ paths:
       security:
         - access_token: []
 
-  /user/{id}:
+  /users:
     get:
       tags:
         - users
-        - user interface
-      description: |
-        Get user info.
-      parameters:
-        - name: id
-          in: path
-          description: user Id
-          type: integer
-          format: int64
-          required: true
-      responses:
-        200:
-          description: User info
-          schema:
-            $ref: '#/definitions/User'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - access_token: []
-    put:
-      tags:
-        - users
-        - user interface
-      description: |
-        Update user info.
-      parameters:
-        - name: id
-          in: path
-          description: user Id
-          type: integer
-          format: int64
-          required: true
-        - name: body
-          in: body
-          description: user info
-          required: true
-          schema:
-            $ref: "#/definitions/User"
-      responses:
-        200:
-          description: User info
-          schema:
-            $ref: '#/definitions/User'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - access_token: []
-
-  /manager/users:
-    get:
-      tags:
-        - users
-        - manager interface
       description: |
         Get user list.
         Paged by 100 users.
         Ordered by alphabeticaly.
+      operationId: getUserList
       parameters:
         - name: last
           in: query
@@ -292,6 +240,7 @@ paths:
         - manager interface
       description: |
         Create new user.
+      operationId: createUser
       parameters:
         - name: body
           in: body
@@ -316,6 +265,7 @@ paths:
         - manager interface
       description: |
         Update user info.
+      operationId: updateUser
       parameters:
         - name: body
           in: body
@@ -335,13 +285,39 @@ paths:
       security:
         - access_token: []
             
-  /manager/users/{id}:
+  /users/{id}:
+    get:
+      tags:
+        - users
+        - user interface
+      description: |
+        Get user info.
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: User info
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
     delete:
       tags:
         - users
         - manager interface
       description: |
         Delete user.
+      operationId: deleteUser
       parameters:
         - name: id
           in: path
