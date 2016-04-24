@@ -1,11 +1,14 @@
 package com.hardskygames.luckycalories.launch;
 
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatEditText;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.hardskygames.luckycalories.ButterKnifeFragment;
+import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.launch.events.ShowSignUpScreen;
 import com.hardskygames.luckycalories.launch.models.Login;
@@ -14,13 +17,14 @@ import com.squareup.otto.Bus;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends ButterKnifeFragment {
+public class LoginFragment extends BaseFragment {
 
     @Bind(R.id.txtEmail)
     AppCompatEditText txtEmail;
@@ -37,8 +41,19 @@ public class LoginFragment extends ButterKnifeFragment {
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_login;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View layout = inflater.inflate(R.layout.fragment_login, container, false);
+        ButterKnife.bind(this, layout);
+
+        return layout;
+    }
+
+    @Override
+    public void onDestroyView() {
+        ButterKnife.unbind(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -67,7 +82,7 @@ public class LoginFragment extends ButterKnifeFragment {
             return;
 
         model.setEmail(txtEmail.getText().toString());
-        txtPassword.setText(txtPassword.getText().toString());
+        model.setPassword(txtPassword.getText().toString());
     }
 
     @OnClick(R.id.btnSignUp)

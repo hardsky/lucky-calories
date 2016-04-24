@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itemCalories"
+        android:icon="@drawable/ic_assignment_black_24dp"
+        android:title="@string/menu_main_calories"/>
+    <item
+        android:id="@+id/itemFilters"
+        android:icon="@drawable/ic_filter_list_black_24dp"
+        android:title="@string/menu_main_filters"/>
+    <item
+        android:id="@+id/itemSettings"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/menu_main_settings"/>
+</menu>

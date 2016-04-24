@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LuckyCalories</string>
+    <string name="app_name">Lucky Calories</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -12,5 +12,9 @@
 
     <string name="fragment_sign_up_name">Name</string>
     <string name="fragment_sign_up_repeat_password">Repeat password</string>
+
+    <string name="menu_main_calories">Calories</string>
+    <string name="menu_main_filters">Filters</string>
+    <string name="menu_main_settings">Settings</string>
 
 </resources>

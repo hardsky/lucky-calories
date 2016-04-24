@@ -3,6 +3,7 @@ package com.hardskygames.luckycalories;
 import android.app.Application;
 
 import com.hardskygames.luckycalories.mocks.MockLuckyCaloriesApi;
+import com.hardskygames.luckycalories.models.User;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
@@ -57,5 +58,11 @@ import retrofit2.mock.NetworkBehavior;
 
         BehaviorDelegate<LuckyCaloriesApi> delegate = mockRetrofit.create(LuckyCaloriesApi.class);
         return new MockLuckyCaloriesApi(delegate);
+    }
+
+    @Provides
+    @Singleton
+    User userProvider(){
+        return new User();
     }
 }
