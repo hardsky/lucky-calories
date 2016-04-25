@@ -1,5 +1,8 @@
 package com.hardskygames.luckycalories.mocks;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +24,67 @@ import retrofit2.mock.BehaviorDelegate;
 public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
     private final BehaviorDelegate<LuckyCaloriesApi> delegate;
     private final Map<String, User> users;
+    private final ArrayList<Calorie> calories;
 
     public MockLuckyCaloriesApi(BehaviorDelegate<LuckyCaloriesApi> delegate){
         this.delegate = delegate;
 
         users = new HashMap<>(10);
+
+
+        calories = new ArrayList<>(10);
+        setCalories();
+    }
+
+    private void setCalories(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.set(Calendar.MINUTE, 14);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 10);
+        Calorie calorie = new Calorie();
+        calorie.setMeal("Meat");
+        calorie.setAmount(400f);
+        calorie.setEatTime(calendar.getTimeInMillis());
+        calorie.setNote("Test1 Test");
+        calorie.setId(1L);
+        calories.add(calorie);
+
+        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calorie = new Calorie();
+        calorie.setMeal("Milk");
+        calorie.setAmount(200f);
+        calorie.setEatTime(calendar.getTimeInMillis());
+        calorie.setNote("Test2 Test");
+        calorie.setId(2L);
+        calories.add(calorie);
+
+        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calorie = new Calorie();
+        calorie.setMeal("Eggs");
+        calorie.setAmount(300f);
+        calorie.setEatTime(calendar.getTimeInMillis());
+        calorie.setNote("Test3 Test");
+        calorie.setId(3L);
+        calories.add(calorie);
+
+        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calorie = new Calorie();
+        calorie.setMeal("Bred with butter");
+        calorie.setAmount(100f);
+        calorie.setEatTime(calendar.getTimeInMillis());
+        calorie.setNote("Test4 Test");
+        calorie.setId(4L);
+        calories.add(calorie);
+
+        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calorie = new Calorie();
+        calorie.setMeal("Beer");
+        calorie.setAmount(200f);
+        calorie.setEatTime(calendar.getTimeInMillis());
+        calorie.setNote("Test5 Test");
+        calorie.setId(5L);
+        calories.add(calorie);
     }
 
     @Override
@@ -55,7 +114,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
     @Override
     public Call<List<Calorie>> getUserCaloriesList(@Path("id") Long id, @Query("last") Long last) {
-        return null;
+        return delegate.returningResponse(calories).getUserCaloriesList(id, last);
     }
 
     @Override
