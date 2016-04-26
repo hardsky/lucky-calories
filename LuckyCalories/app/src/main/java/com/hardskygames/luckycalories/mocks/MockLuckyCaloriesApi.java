@@ -41,7 +41,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         calendar.set(Calendar.MINUTE, 14);
 
-        calendar.set(Calendar.HOUR_OF_DAY, 10);
+        calendar.set(Calendar.HOUR_OF_DAY, 22);
         Calorie calorie = new Calorie();
         calorie.setMeal("Meat");
         calorie.setAmount(400f);
@@ -50,7 +50,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calorie.setId(1L);
         calories.add(calorie);
 
-        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Milk");
         calorie.setAmount(200f);
@@ -59,7 +59,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calorie.setId(2L);
         calories.add(calorie);
 
-        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Eggs");
         calorie.setAmount(300f);
@@ -68,7 +68,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calorie.setId(3L);
         calories.add(calorie);
 
-        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Bred with butter");
         calorie.setAmount(100f);
@@ -77,7 +77,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calorie.setId(4L);
         calories.add(calorie);
 
-        calendar.add(Calendar.HOUR_OF_DAY, 2);
+        calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Beer");
         calorie.setAmount(200f);

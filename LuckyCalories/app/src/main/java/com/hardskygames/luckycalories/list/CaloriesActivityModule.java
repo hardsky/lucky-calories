@@ -10,6 +10,7 @@ import dagger.Module;
 @Module(
         injects = {
                 CaloriesActivity.class,
+                CaloriesListFragment.class
         },
         addsTo = com.hardskygames.luckycalories.LuckyCaloriesAppModule.class,
         library = true

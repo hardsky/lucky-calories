@@ -1,6 +1,9 @@
 package com.hardskygames.luckycalories.list;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -31,8 +34,13 @@ public class CaloriesActivity extends BaseActivity {
 
     @Inject
     User user;
+    @Inject
+    CaloriesListFragment caloriesListFragment;
 
     int[] menuTitles;
+
+    private Fragment cur = null;
+    private Drawer drawler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +72,7 @@ public class CaloriesActivity extends BaseActivity {
                 })
                 .build();
 
-        new DrawerBuilder()
+        drawler = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
@@ -82,16 +90,44 @@ public class CaloriesActivity extends BaseActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
                         toolbar.setTitle(menuTitles[position - 1]);
+                        switch (position){
+                            case 1:
+                                createCaloriesScreen();
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            default:
+                                return false;
+                        }
+                        drawler.closeDrawer();
                         return true;
                     }
                 })
                 .build();
+
+        createCaloriesScreen();
     }
 
     @Override
     protected List<Object> getModules() {
         return Collections.<Object>singletonList(new CaloriesActivityModule(this));
+    }
+
+    private void createCaloriesScreen(){
+        if(cur == caloriesListFragment)
+            return;
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if(cur != null){
+            transaction.remove(cur);
+        }
+        transaction.add(R.id.container, caloriesListFragment);
+        transaction.commit();
+
+        cur = caloriesListFragment;
     }
 }

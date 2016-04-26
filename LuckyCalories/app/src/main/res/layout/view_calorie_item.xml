@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    android:layout_height="88dp">
+
+    <TextView
+        android:id="@+id/txtMeal"
+        android:textSize="16sp"
+        android:textColor="#212121"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="Meat" />
+    <TextView
+        android:id="@+id/txtKCal"
+        android:layout_marginLeft="15dp"
+        android:textSize="16sp"
+        android:textColor="#212121"
+        android:layout_toRightOf="@id/txtMeal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="400" />
+    <TextView
+        android:layout_toRightOf="@id/txtKCal"
+        android:id="@+id/lblKCal"
+        android:layout_marginLeft="5dp"
+        android:textColor="#212121"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="kcal" />
+    <TextView
+        android:paddingLeft="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/txtTime"
+        android:textSize="12sp"
+        android:textColor="#757575"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="12:00" />
+    <TextView
+        android:layout_below="@id/txtMeal"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/txtComment"
+        android:textSize="14sp"
+        android:textColor="#757575"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Comments Comments" />
+</RelativeLayout>

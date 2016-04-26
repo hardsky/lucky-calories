@@ -7,6 +7,7 @@ public class User {
     private String name;
     private String email;
     private String accessToken;
+    private long id;
 
     public String getName() {
         return name;
@@ -34,5 +35,13 @@ public class User {
 
     public boolean isLoggedIn(){
         return accessToken != null;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
