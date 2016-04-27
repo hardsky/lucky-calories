@@ -9,6 +9,8 @@ import android.view.View;
 
 import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
+import com.hardskygames.luckycalories.launch.events.ShowSignUpScreen;
+import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.models.User;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -18,6 +20,8 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +40,8 @@ public class CaloriesActivity extends BaseActivity {
     User user;
     @Inject
     CaloriesListFragment caloriesListFragment;
+    @Inject
+    Bus bus;
 
     int[] menuTitles;
 
@@ -116,6 +122,18 @@ public class CaloriesActivity extends BaseActivity {
         return Collections.<Object>singletonList(new CaloriesActivityModule(this));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        bus.unregister(this);
+    }
+
     private void createCaloriesScreen(){
         if(cur == caloriesListFragment)
             return;
@@ -130,4 +148,16 @@ public class CaloriesActivity extends BaseActivity {
 
         cur = caloriesListFragment;
     }
+
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        EditCalorieFragment editNameDialogFragment = new EditCalorieFragment();
+        editNameDialogFragment.show(fm, "fragment_edit_name");
+    }
+
+    @Subscribe
+    public void onAddCalorieClick(AddCalorieEvent ev){
+        showEditDialog();
+    }
+
 }

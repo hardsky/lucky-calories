@@ -3,6 +3,7 @@ package com.hardskygames.luckycalories.list;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,19 +14,22 @@ import android.widget.TextView;
 
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
+import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.models.CalorieModel;
 import com.hardskygames.luckycalories.models.User;
 import com.mobandme.android.transformer.Transformer;
+import com.squareup.otto.Bus;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.swagger.client.api.LuckyCaloriesApi;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,17 +45,25 @@ public class CaloriesListFragment extends Fragment {
     LuckyCaloriesApi api;
     @Inject
     User user;
+    @Inject
+    Bus bus;
+
+    @Bind(R.id.listCalories)
+    RecyclerView listLayout;
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
 
     private List<CalorieModel> calorieList = new ArrayList<>(20);
     private CalorieModel selectedCalorie;
-    private long lastDate = 0;
-    private ProgressBar mProgressBar;
-    private CaloriesAdapter mAdapter;
-    private Call<List<io.swagger.client.model.Calorie>> callList;
-    private RecyclerView listLayout;
+
     private LinearLayoutManager layoutManager;
-    private Transformer caloriesTransformer;
+    private CaloriesAdapter adapter;
     private EndlessRecyclerOnScrollListener scrollListener;
+
+    private long lastDate = 0;
+    private Call<List<io.swagger.client.model.Calorie>> callList;
+
+    private Transformer caloriesTransformer;
 
     public CaloriesListFragment() {
         // Required empty public constructor
@@ -62,14 +74,13 @@ public class CaloriesListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_calories_list, container, false);
-        listLayout = ButterKnife.findById(layout, R.id.listCalories);
+        ButterKnife.bind(this, layout);
+
         layoutManager = new LinearLayoutManager(getActivity());
         listLayout.setLayoutManager(layoutManager);
 
-        mAdapter = new CaloriesAdapter();
-        listLayout.setAdapter(mAdapter);
-
-        mProgressBar = ButterKnife.findById(layout, R.id.progressBar);
+        adapter = new CaloriesAdapter();
+        listLayout.setAdapter(adapter);
 
         caloriesTransformer = new Transformer
                 .Builder()
@@ -88,9 +99,34 @@ public class CaloriesListFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        ButterKnife.unbind(this);
+        super.onDestroyView();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         addScrollListener();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        bus.unregister(this);
+
+        super.onPause();
+
+        listLayout.clearOnScrollListeners();
+        if(callList != null){
+            callList.cancel();
+            callList = null;
+        }
+    }
+
+    @OnClick(R.id.btnAdd)
+    public void addNewCalorie(){
+        bus.post(new AddCalorieEvent());
     }
 
     private void addScrollListener(){
@@ -98,7 +134,7 @@ public class CaloriesListFragment extends Fragment {
     }
 
     private void loadPage(){
-        mProgressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         callList = api.getUserCaloriesList(user.getId(), lastDate);
 
         //listLayout.clearOnScrollListeners(); //add next, when current will complete
@@ -109,37 +145,26 @@ public class CaloriesListFragment extends Fragment {
             public void onResponse(Call<List<io.swagger.client.model.Calorie>> call, Response<List<io.swagger.client.model.Calorie>> response) {
                 List<io.swagger.client.model.Calorie> list =  response.body();
                 if(list != null && !list.isEmpty()) {
-                    int entryCount = mAdapter.getItemCount();
+                    int entryCount = adapter.getItemCount();
                     for (io.swagger.client.model.Calorie respCl : list) {
                         calorieList.add(caloriesTransformer.transform(respCl, CalorieModel.class));
                     }
 
                     lastDate = list.get(list.size() - 1).getEatTime();
-                    mAdapter.notifyItemRangeInserted(entryCount, list.size());
+                    adapter.notifyItemRangeInserted(entryCount, list.size());
                 }
 
                 addScrollListener();
-                mProgressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<List<io.swagger.client.model.Calorie>> call, Throwable t) {
                 Timber.e(t, "Error on request calories list.");
                 addScrollListener();
-                mProgressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        listLayout.clearOnScrollListeners();
-        if(callList != null){
-            callList.cancel();
-            callList = null;
-        }
     }
 
     private class CaloriesAdapter extends RecyclerView.Adapter {
