@@ -139,7 +139,8 @@ public class CaloriesListFragment extends BaseFragment {
             adapter.notifyItemInserted(0);
         }
         else{//update
-
+            //it's already in list
+            adapter.notifyItemChanged(calorieList.indexOf(ev.model));
         }
     }
 
@@ -223,7 +224,7 @@ public class CaloriesListFragment extends BaseFragment {
                 txtTime = ButterKnife.findById(itemView, R.id.txtTime);
                 txtComment = ButterKnife.findById(itemView, R.id.txtComment);
 
-                //itemView.setOnLongClickListener(this);
+                itemView.setOnLongClickListener(this);
             }
 
             public void setData(CalorieModel data) {
@@ -240,7 +241,10 @@ public class CaloriesListFragment extends BaseFragment {
 
             @Override
             public boolean onLongClick(View v) {
-                selectedCalorie = calorie;
+                AddCalorieEvent ev = new AddCalorieEvent();
+                ev.model = calorie;
+                bus.post(ev);
+
                 return true;
             }
         }

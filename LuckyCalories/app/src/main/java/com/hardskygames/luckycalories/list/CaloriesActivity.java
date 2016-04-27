@@ -150,15 +150,15 @@ public class CaloriesActivity extends BaseActivity {
         cur = caloriesListFragment;
     }
 
-    private void showEditDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        EditCalorieFragment editNameDialogFragment = new EditCalorieFragment();
-        editNameDialogFragment.show(fm, "fragment_edit_name");
-    }
-
     @Subscribe
     public void onAddCalorieClick(AddCalorieEvent ev){
-        showEditDialog();
+        FragmentManager fm = getSupportFragmentManager();
+        EditCalorieFragment editCalorieDialog = new EditCalorieFragment();
+        if(ev.model != null){
+            editCalorieDialog.setModel(ev.model);
+            ev.model = null;
+        }
+        editCalorieDialog.show(fm, "fragment_edit_name");
     }
 
 }

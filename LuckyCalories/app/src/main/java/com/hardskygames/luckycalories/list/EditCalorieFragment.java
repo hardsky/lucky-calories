@@ -25,6 +25,7 @@ import com.squareup.otto.Bus;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -82,7 +83,12 @@ public class EditCalorieFragment extends DialogFragment implements TimePickerDia
             }
         });
 
-
+        if(model.getId() > 0) { //existed value; edit mode
+            txtMeal.setText(model.getMeal());
+            txtKCal.setText(String.format(Locale.US, "%.2f", model.getAmount()));
+            txtTime.setText(new SimpleDateFormat("HH:mm").format(model.getEatTime()));
+            txtNote.setText(model.getNote());
+        }
 
         return layout;
     }
