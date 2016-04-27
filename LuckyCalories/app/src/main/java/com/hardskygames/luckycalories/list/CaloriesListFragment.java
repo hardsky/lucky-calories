@@ -12,13 +12,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
 import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
+import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
 import com.hardskygames.luckycalories.models.CalorieModel;
 import com.hardskygames.luckycalories.models.User;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -39,7 +42,7 @@ import timber.log.Timber;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CaloriesListFragment extends Fragment {
+public class CaloriesListFragment extends BaseFragment {
 
     @Inject
     LuckyCaloriesApi api;
@@ -127,6 +130,17 @@ public class CaloriesListFragment extends Fragment {
     @OnClick(R.id.btnAdd)
     public void addNewCalorie(){
         bus.post(new AddCalorieEvent());
+    }
+
+    @Subscribe
+    public void onCalorieEdit(EditCalorieEvent ev){
+        if(ev.model.getId() == 0L){//create
+            calorieList.add(0, ev.model);
+            adapter.notifyItemInserted(0);
+        }
+        else{//update
+
+        }
     }
 
     private void addScrollListener(){
@@ -227,7 +241,7 @@ public class CaloriesListFragment extends Fragment {
             @Override
             public boolean onLongClick(View v) {
                 selectedCalorie = calorie;
-                return false;
+                return true;
             }
         }
 

@@ -39,9 +39,10 @@ public class CaloriesActivity extends BaseActivity {
     @Inject
     User user;
     @Inject
-    CaloriesListFragment caloriesListFragment;
-    @Inject
     Bus bus;
+
+    @Inject
+    CaloriesListFragment caloriesListFragment;
 
     int[] menuTitles;
 

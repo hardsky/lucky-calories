@@ -18,5 +18,9 @@
     <string name="menu_main_settings">Settings</string>
 
     <string name="save">SAVE</string>
+    <string name="fragment_edit_meal">Meal</string>
+    <string name="fragment_edit_kcal">Calories (kcal)</string>
+    <string name="fragment_edit_time">Time</string>
+    <string name="fragment_edit_comments">Comments</string>
 
 </resources>
