@@ -12,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.common.base.Predicate;
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
+import com.hardskygames.luckycalories.common.Utils;
 import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
 import com.hardskygames.luckycalories.models.CalorieModel;
@@ -34,6 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.swagger.client.api.LuckyCaloriesApi;
+import io.swagger.client.model.Calorie;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,7 +60,6 @@ public class CaloriesListFragment extends BaseFragment {
     ProgressBar progressBar;
 
     private List<CalorieModel> calorieList = new ArrayList<>(20);
-    private CalorieModel selectedCalorie;
 
     private LinearLayoutManager layoutManager;
     private CaloriesAdapter adapter;
@@ -134,13 +136,53 @@ public class CaloriesListFragment extends BaseFragment {
 
     @Subscribe
     public void onCalorieEdit(EditCalorieEvent ev){
-        if(ev.model.getId() == 0L){//create
-            calorieList.add(0, ev.model);
-            adapter.notifyItemInserted(0);
+        final CalorieModel calorieModel = ev.model;
+        ev.model = null;
+        if(calorieModel.getId() == 0L){//create
+
+            adapter.notifyItemInserted(Utils.addToSortedList(calorieList, calorieModel, new Predicate<CalorieModel>() {
+                @Override
+                public boolean apply(CalorieModel input) {
+                    return calorieModel.getEatTime().getTime() > input.getEatTime().getTime();
+                }
+            }));
+
+            Call<Calorie> calorieCall = api.createUserCalorie(user.getId(),
+                    caloriesTransformer.transform(calorieModel, Calorie.class));
+            calorieCall.enqueue(new Callback<Calorie>() {
+                @Override
+                public void onResponse(Call<Calorie> call, Response<Calorie> response) {
+                    calorieModel.setId(response.body().getId());
+                }
+
+                @Override
+                public void onFailure(Call<Calorie> call, Throwable t) {
+                    Timber.e(t, "Error on adding calorie entry.");
+                }
+            });
         }
         else{//update
-            //it's already in list
-            adapter.notifyItemChanged(calorieList.indexOf(ev.model));
+            int idx = calorieList.indexOf(calorieModel);
+            calorieList.remove(idx);
+            adapter.notifyItemRemoved(idx);
+
+            Call<Calorie> calorieCall = api.updateUserCalorie(user.getId(), caloriesTransformer.transform(calorieModel, Calorie.class));
+            calorieCall.enqueue(new Callback<Calorie>() {
+                @Override
+                public void onResponse(Call<Calorie> call, Response<Calorie> response) {
+                    adapter.notifyItemInserted(Utils.addToSortedList(calorieList, calorieModel, new Predicate<CalorieModel>() {
+                        @Override
+                        public boolean apply(CalorieModel input) {
+                            return calorieModel.getEatTime().getTime() > input.getEatTime().getTime();
+                        }
+                    }));
+                }
+
+                @Override
+                public void onFailure(Call<Calorie> call, Throwable t) {
+                    Timber.e(t, "Error on adding calorie entry.");
+                }
+            });
         }
     }
 

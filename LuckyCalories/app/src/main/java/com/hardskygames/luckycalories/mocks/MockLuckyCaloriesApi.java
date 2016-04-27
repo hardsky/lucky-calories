@@ -1,7 +1,15 @@
 package com.hardskygames.luckycalories.mocks;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -94,7 +102,22 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
     @Override
     public Call<Calorie> createUserCalorie(@Path("id") Long id, @Body Calorie calorie) {
-        return null;
+        calorie.setId((long)calories.size());
+
+        boolean inserted = false;
+        for(int i = 0; i < calories.size(); i++){
+            if(calorie.getEatTime() > calories.get(i).getEatTime()){
+                inserted = true;
+                calories.add(i, calorie);
+                break;
+            }
+
+        }
+        if(!inserted){
+            calories.add(calories.size(), calorie);
+        }
+
+        return delegate.returningResponse(calorie).createUserCalorie(id, calorie);
     }
 
     @Override
@@ -113,8 +136,21 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
     }
 
     @Override
-    public Call<List<Calorie>> getUserCaloriesList(@Path("id") Long id, @Query("last") Long last) {
-        return delegate.returningResponse(calories).getUserCaloriesList(id, last);
+    public Call<List<Calorie>> getUserCaloriesList(@Path("id") Long id, @Query("last") final Long last) {
+        List<Calorie> res;
+        if(last == 0){
+            res = calories;
+        }
+        else {
+            res = new ArrayList<>(Collections2.filter(calories, new Predicate<Calorie>() {
+                @Override
+                public boolean apply(Calorie input) {
+                    return input.getEatTime() < last;
+                }
+            }));
+        }
+
+        return delegate.returningResponse(res).getUserCaloriesList(id, last);
     }
 
     @Override
@@ -147,6 +183,29 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
     @Override
     public Call<Calorie> updateUserCalorie(@Path("id") Long id, @Body Calorie calorie) {
-        return null;
+        final Calorie tmp = calorie;
+        Calorie existed = Iterables.find(calories, new Predicate<Calorie>() {
+            @Override
+            public boolean apply(Calorie input) {
+                return tmp.getId().equals(input.getId());
+            }
+        });
+        existed.setMeal(calorie.getMeal());
+        existed.setAmount(calorie.getAmount());
+        existed.setEatTime(calorie.getEatTime());
+        existed.setNote(calorie.getNote());
+
+        Collections.sort(calories, new Ordering<Calorie>() {
+            @Override
+            public int compare(Calorie left, Calorie right) {
+                if(left.getEatTime() > right.getEatTime())
+                    return 1;
+                else if(left.getEatTime() < right.getEatTime())
+                    return -1;
+                return 0;
+            }
+        });
+
+        return delegate.returningResponse(existed).updateUserCalorie(id, calorie);
     }
 }
