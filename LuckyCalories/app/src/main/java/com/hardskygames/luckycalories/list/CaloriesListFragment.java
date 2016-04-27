@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
@@ -70,6 +73,25 @@ public class CaloriesListFragment extends BaseFragment {
 
     private Transformer caloriesTransformer;
 
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    CalorieModel model = ((CommentItemViewHolder)viewHolder).getData();
+
+                    int idx = calorieList.indexOf(model);
+                    calorieList.remove(idx);
+                    adapter.notifyItemRemoved(idx);
+
+                }
+            }
+    );
+
     public CaloriesListFragment() {
         // Required empty public constructor
     }
@@ -99,6 +121,8 @@ public class CaloriesListFragment extends BaseFragment {
         };
 
         loadPage();
+
+        itemTouchHelper.attachToRecyclerView(listLayout);
 
         return layout;
     }
@@ -249,47 +273,52 @@ public class CaloriesListFragment extends BaseFragment {
             return calorieList.size();
         }
 
-        private class CommentItemViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    }
 
-            public TextView txtMeal;
-            public TextView txtKCal;
-            public TextView txtTime;
-            public TextView txtComment;
+    private class CommentItemViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
-            private CalorieModel calorie;
+        public TextView txtMeal;
+        public TextView txtKCal;
+        public TextView txtTime;
+        public TextView txtComment;
 
-            public CommentItemViewHolder(View itemView) {
-                super(itemView);
+        private CalorieModel calorie;
 
-                txtMeal = ButterKnife.findById(itemView, R.id.txtMeal);
-                txtKCal = ButterKnife.findById(itemView, R.id.txtKCal);
-                txtTime = ButterKnife.findById(itemView, R.id.txtTime);
-                txtComment = ButterKnife.findById(itemView, R.id.txtComment);
+        public CommentItemViewHolder(View itemView) {
+            super(itemView);
 
-                itemView.setOnLongClickListener(this);
-            }
+            txtMeal = ButterKnife.findById(itemView, R.id.txtMeal);
+            txtKCal = ButterKnife.findById(itemView, R.id.txtKCal);
+            txtTime = ButterKnife.findById(itemView, R.id.txtTime);
+            txtComment = ButterKnife.findById(itemView, R.id.txtComment);
 
-            public void setData(CalorieModel data) {
-                DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                        //DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
-
-                this.calorie = data;
-
-                txtMeal.setText(calorie.getMeal());
-                txtKCal.setText(String.format("%.0f", calorie.getAmount()));
-                txtTime.setText(timeFormat.format(calorie.getEatTime()));
-                txtComment.setText(calorie.getNote());
-            }
-
-            @Override
-            public boolean onLongClick(View v) {
-                AddCalorieEvent ev = new AddCalorieEvent();
-                ev.model = calorie;
-                bus.post(ev);
-
-                return true;
-            }
+            itemView.setOnLongClickListener(this);
         }
 
+        public void setData(CalorieModel data) {
+            DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            //DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
+
+            this.calorie = data;
+
+            txtMeal.setText(calorie.getMeal());
+            txtKCal.setText(String.format("%.0f", calorie.getAmount()));
+            txtTime.setText(timeFormat.format(calorie.getEatTime()));
+            txtComment.setText(calorie.getNote());
+        }
+
+        public CalorieModel getData(){
+            return calorie;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            AddCalorieEvent ev = new AddCalorieEvent();
+            ev.model = calorie;
+            bus.post(ev);
+
+            return true;
+        }
     }
+
 }

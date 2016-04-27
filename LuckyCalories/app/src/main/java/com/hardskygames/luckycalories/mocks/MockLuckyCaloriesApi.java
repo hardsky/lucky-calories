@@ -126,8 +126,14 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
     }
 
     @Override
-    public Call<Void> deleteUserCalorie(@Path("id") Long id, @Path("calorieId") Long calorieId) {
-        return null;
+    public Call<Void> deleteUserCalorie(@Path("id") Long id, @Path("calorieId") final Long calorieId) {
+        Iterables.removeIf(calories, new Predicate<Calorie>() {
+            @Override
+            public boolean apply(Calorie input) {
+                return input.getId().equals(calorieId);
+            }
+        });
+        return delegate.returningResponse(null).deleteUserCalorie(id, calorieId);
     }
 
     @Override

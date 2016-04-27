@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.instanceOf;
 @LargeTest
 public class LaunchTest {
     @Rule
-    public ActivityTestRule<LaunchActivity> mActivityRule = new ActivityTestRule(LaunchActivity.class);
+    public ActivityTestRule<LaunchActivity> mActivityRule = new ActivityTestRule<>(LaunchActivity.class);
 
     @Test
     public void afterClickSignUpBtnMovedToSignUpScreen(){
