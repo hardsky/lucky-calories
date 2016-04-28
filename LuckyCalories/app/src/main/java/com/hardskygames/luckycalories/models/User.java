@@ -8,6 +8,7 @@ public class User {
     private String email;
     private String accessToken;
     private long id;
+    private float dailyCalories = 2200f;
 
     public String getName() {
         return name;
@@ -43,5 +44,13 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public float getDailyCalories() {
+        return dailyCalories;
+    }
+
+    public void setDailyCalories(float dailyCalories) {
+        this.dailyCalories = dailyCalories;
     }
 }

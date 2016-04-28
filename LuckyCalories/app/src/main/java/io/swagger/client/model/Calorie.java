@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import com.google.gson.annotations.SerializedName;
 import com.hardskygames.luckycalories.mapper.DateToLongParser;
 import com.hardskygames.luckycalories.mapper.LongToDateParser;
-import com.hardskygames.luckycalories.models.CalorieModel;
+import com.hardskygames.luckycalories.list.models.CalorieModel;
 import com.mobandme.android.transformer.compiler.Mappable;
 import com.mobandme.android.transformer.compiler.Mapped;
 import com.mobandme.android.transformer.compiler.Parse;

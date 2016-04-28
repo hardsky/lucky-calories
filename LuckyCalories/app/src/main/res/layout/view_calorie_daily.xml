@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/txtDate"
+        android:textSize="16sp"
+        android:textColor="#757575"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today"
+        />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/txtTotal"
+        android:textSize="14sp"
+        android:textColor="#212121"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="2000 kcal"
+        />
+
+</android.support.v7.widget.LinearLayoutCompat>

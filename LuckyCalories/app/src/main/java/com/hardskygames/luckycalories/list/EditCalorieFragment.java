@@ -19,7 +19,7 @@ import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.TimePickerFragment;
 import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
-import com.hardskygames.luckycalories.models.CalorieModel;
+import com.hardskygames.luckycalories.list.models.CalorieModel;
 import com.squareup.otto.Bus;
 
 import java.text.DateFormat;

@@ -1,11 +1,13 @@
-package com.hardskygames.luckycalories.models;
+package com.hardskygames.luckycalories.list.models;
+
+import com.hardskygames.luckycalories.list.ICalorieListItem;
 
 import java.util.Date;
 
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 25.04.16.
  */
-public class CalorieModel {
+public class CalorieModel implements ICalorieListItem {
     private long id = 0L;
 
     private String meal = null;
@@ -54,5 +56,10 @@ public class CalorieModel {
 
     public void setEatTime(Date eatTime) {
         this.eatTime = eatTime;
+    }
+
+    @Override
+    public int getType() {
+        return MEAL_CALORIE;
     }
 }

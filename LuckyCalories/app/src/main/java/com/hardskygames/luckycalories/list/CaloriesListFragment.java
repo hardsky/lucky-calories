@@ -3,7 +3,6 @@ package com.hardskygames.luckycalories.list;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -14,15 +13,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Strings;
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
 import com.hardskygames.luckycalories.common.Utils;
 import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
-import com.hardskygames.luckycalories.models.CalorieModel;
+import com.hardskygames.luckycalories.list.models.CalorieModel;
+import com.hardskygames.luckycalories.list.models.DailyCalorie;
 import com.hardskygames.luckycalories.models.User;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
@@ -31,6 +30,8 @@ import com.squareup.otto.Subscribe;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,13 +63,14 @@ public class CaloriesListFragment extends BaseFragment {
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
-    private List<CalorieModel> calorieList = new ArrayList<>(20);
+    private List<ICalorieListItem> calorieList = new ArrayList<>(20);
 
     private LinearLayoutManager layoutManager;
     private CaloriesAdapter adapter;
     private EndlessRecyclerOnScrollListener scrollListener;
 
     private long lastDate = 0;
+    private DailyCalorie daily = null;
     private Call<List<io.swagger.client.model.Calorie>> callList;
 
     private Transformer caloriesTransformer;
@@ -164,10 +166,15 @@ public class CaloriesListFragment extends BaseFragment {
         ev.model = null;
         if(calorieModel.getId() == 0L){//create
 
-            adapter.notifyItemInserted(Utils.addToSortedList(calorieList, calorieModel, new Predicate<CalorieModel>() {
+            adapter.notifyItemInserted(Utils.addToSortedList(calorieList, calorieModel, new Predicate<ICalorieListItem>() {
                 @Override
-                public boolean apply(CalorieModel input) {
-                    return calorieModel.getEatTime().getTime() > input.getEatTime().getTime();
+                public boolean apply(ICalorieListItem input) {
+                    if(input.getType() == ICalorieListItem.MEAL_CALORIE){
+                        return calorieModel.getEatTime().getTime() > ((CalorieModel)input).getEatTime().getTime();
+                    }
+                    else{
+                        return false;
+                    }
                 }
             }));
 
@@ -194,10 +201,15 @@ public class CaloriesListFragment extends BaseFragment {
             calorieCall.enqueue(new Callback<Calorie>() {
                 @Override
                 public void onResponse(Call<Calorie> call, Response<Calorie> response) {
-                    adapter.notifyItemInserted(Utils.addToSortedList(calorieList, calorieModel, new Predicate<CalorieModel>() {
+                    adapter.notifyItemInserted(Utils.addToSortedList(calorieList, calorieModel, new Predicate<ICalorieListItem>() {
                         @Override
-                        public boolean apply(CalorieModel input) {
-                            return calorieModel.getEatTime().getTime() > input.getEatTime().getTime();
+                        public boolean apply(ICalorieListItem input) {
+                            if(input.getType() == ICalorieListItem.MEAL_CALORIE){
+                                return calorieModel.getEatTime().getTime() > ((CalorieModel)input).getEatTime().getTime();
+                            }
+                            else{
+                                return false;
+                            }
                         }
                     }));
                 }
@@ -227,8 +239,20 @@ public class CaloriesListFragment extends BaseFragment {
                 List<io.swagger.client.model.Calorie> list =  response.body();
                 if(list != null && !list.isEmpty()) {
                     int entryCount = adapter.getItemCount();
+
                     for (io.swagger.client.model.Calorie respCl : list) {
-                        calorieList.add(caloriesTransformer.transform(respCl, CalorieModel.class));
+
+                        if(lastDate == 0 || DailyCalorie.isNewDate(lastDate, respCl.getEatTime())){
+                            lastDate = respCl.getEatTime();
+                            daily = new DailyCalorie();
+                            daily.setDate(new Date(lastDate));
+
+                            calorieList.add(daily);
+                        }
+
+                        CalorieModel calorie = caloriesTransformer.transform(respCl, CalorieModel.class);
+                        daily.setCalories(daily.getCalories() + calorie.getAmount());
+                        calorieList.add(calorie);
                     }
 
                     lastDate = list.get(list.size() - 1).getEatTime();
@@ -251,10 +275,26 @@ public class CaloriesListFragment extends BaseFragment {
     private class CaloriesAdapter extends RecyclerView.Adapter {
 
         @Override
+        public int getItemViewType(int position) {
+            if(calorieList.isEmpty()) {
+                return 0;
+            }
+
+            return calorieList.get(position).getType();
+        }
+
+        @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.view_calorie_item, parent, false);
-            return new CommentItemViewHolder(v);
+            if(viewType == ICalorieListItem.MEAL_CALORIE){
+                View v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.view_calorie_item, parent, false);
+                return new CommentItemViewHolder(v);
+            }
+            else{
+                View v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.view_calorie_daily, parent, false);
+                return new DayItemViewHolder(v);
+            }
         }
 
         @Override
@@ -263,14 +303,46 @@ public class CaloriesListFragment extends BaseFragment {
             if (calorieList.isEmpty())
                 return;
 
-            CalorieModel comment = calorieList.get(position);
-            CommentItemViewHolder viewHolder = (CommentItemViewHolder) holder;
-            viewHolder.setData(comment);
+            if(getItemViewType(position) == ICalorieListItem.MEAL_CALORIE){
+                CalorieModel comment = (CalorieModel) calorieList.get(position);
+                CommentItemViewHolder viewHolder = (CommentItemViewHolder) holder;
+                viewHolder.setData(comment);
+            }
+            else{
+                DailyCalorie comment = (DailyCalorie) calorieList.get(position);
+                DayItemViewHolder viewHolder = (DayItemViewHolder) holder;
+                viewHolder.setData(comment);
+            }
         }
 
         @Override
         public int getItemCount() {
             return calorieList.size();
+        }
+
+    }
+
+    private class DayItemViewHolder extends RecyclerView.ViewHolder{
+
+        public TextView txtDate;
+        public TextView txtTotal;
+
+        private DailyCalorie daily;
+
+        public DayItemViewHolder(View itemView) {
+            super(itemView);
+
+            txtDate = ButterKnife.findById(itemView, R.id.txtDate);
+            txtTotal = ButterKnife.findById(itemView, R.id.txtTotal);
+        }
+
+        public void setData(DailyCalorie data) {
+            DateFormat timeFormat = new SimpleDateFormat("dd MMM");
+
+            this.daily = data;
+
+            txtDate.setText(timeFormat.format(data.getDate()));
+            txtTotal.setText(String.format("%.0f kcal", data.getCalories()));
         }
 
     }
