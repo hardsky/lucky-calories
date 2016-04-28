@@ -1,5 +1,7 @@
 package com.hardskygames.luckycalories.list;
 
+import com.hardskygames.luckycalories.list.models.IColorSubscriber;
+
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 28.04.16.
  */
@@ -8,4 +10,7 @@ public interface ICalorieListItem {
     int DAILY_CALORIE = 1;
 
     int getType();
+
+    void register(IColorSubscriber colorSubscriber);
+    void unregister(IColorSubscriber colorSubscriber);
 }

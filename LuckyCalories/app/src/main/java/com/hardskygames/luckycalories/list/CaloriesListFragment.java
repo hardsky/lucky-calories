@@ -22,6 +22,7 @@ import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
 import com.hardskygames.luckycalories.list.models.CalorieModel;
 import com.hardskygames.luckycalories.list.models.DailyCalorie;
+import com.hardskygames.luckycalories.list.models.IColorSubscriber;
 import com.hardskygames.luckycalories.models.User;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
@@ -94,11 +95,11 @@ public class CaloriesListFragment extends BaseFragment {
                 @Override
                 public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                     CalorieModel model = ((CommentItemViewHolder)viewHolder).getData();
+                    model.remove();
 
                     int idx = calorieList.indexOf(model);
                     calorieList.remove(idx);
                     adapter.notifyItemRemoved(idx);
-
                 }
             }
     );
@@ -253,14 +254,14 @@ public class CaloriesListFragment extends BaseFragment {
 
                         if(lastDate == 0 || DailyCalorie.isNewDate(lastDate, respCl.getEatTime())){
                             lastDate = respCl.getEatTime();
-                            daily = new DailyCalorie();
+                            daily = new DailyCalorie(user.getDailyCalories());
                             daily.setDate(new Date(lastDate));
 
                             calorieList.add(daily);
                         }
 
                         CalorieModel calorie = caloriesTransformer.transform(respCl, CalorieModel.class);
-                        daily.setCalories(daily.getCalories() + calorie.getAmount());
+                        daily.add(calorie);
                         calorieList.add(calorie);
                     }
 
@@ -331,7 +332,7 @@ public class CaloriesListFragment extends BaseFragment {
 
     }
 
-    private class DayItemViewHolder extends RecyclerView.ViewHolder{
+    private class DayItemViewHolder extends RecyclerView.ViewHolder implements IColorSubscriber{
 
         public TextView txtDate;
         public TextView txtTotal;
@@ -352,11 +353,23 @@ public class CaloriesListFragment extends BaseFragment {
 
             txtDate.setText(timeFormat.format(data.getDate()));
             txtTotal.setText(String.format("%.0f kcal", data.getCalories()));
+
+            data.register(this);
         }
 
+        @Override
+        public void notifyGreen() {
+            itemView.setBackgroundResource(R.color.md_green_400);
+        }
+
+        @Override
+        public void notifyRed() {
+            itemView.setBackgroundResource(R.color.md_red_400);
+        }
     }
 
-    private class CommentItemViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    private class CommentItemViewHolder extends RecyclerView.ViewHolder
+            implements View.OnLongClickListener, IColorSubscriber {
 
         public TextView txtMeal;
         public TextView txtKCal;
@@ -373,6 +386,8 @@ public class CaloriesListFragment extends BaseFragment {
             txtTime = ButterKnife.findById(itemView, R.id.txtTime);
             txtComment = ButterKnife.findById(itemView, R.id.txtComment);
 
+            notifyGreen();
+
             itemView.setOnLongClickListener(this);
         }
 
@@ -386,6 +401,8 @@ public class CaloriesListFragment extends BaseFragment {
             txtKCal.setText(String.format("%.0f", calorie.getAmount()));
             txtTime.setText(timeFormat.format(calorie.getEatTime()));
             txtComment.setText(calorie.getNote());
+
+            data.register(this);
         }
 
         public CalorieModel getData(){
@@ -399,6 +416,16 @@ public class CaloriesListFragment extends BaseFragment {
             bus.post(ev);
 
             return true;
+        }
+
+        @Override
+        public void notifyGreen() {
+            itemView.setBackgroundResource(R.color.md_green_400);
+        }
+
+        @Override
+        public void notifyRed() {
+            itemView.setBackgroundResource(R.color.md_red_400);
         }
     }
 
