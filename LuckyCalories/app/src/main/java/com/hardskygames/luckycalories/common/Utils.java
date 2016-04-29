@@ -9,19 +9,13 @@ import java.util.List;
  */
 public final class Utils {
     public static <T> int addToSortedList(List<T> lst, T item, Predicate<T> predicate){
-        boolean inserted = false;
-
         int idx = 0;
         for(; idx < lst.size(); idx++){
             if(predicate.apply(lst.get(idx))){
-                inserted = true;
-                lst.add(idx, item);
                 break;
             }
         }
-        if(!inserted){
-            lst.add(lst.size(), item);
-        }
+        lst.add(idx, item);
 
         return idx;
     }

@@ -1,6 +1,7 @@
 package com.hardskygames.luckycalories.list;
 
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,10 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
+import com.hardskygames.luckycalories.common.DatePickerFragment;
 import com.hardskygames.luckycalories.common.TimePickerFragment;
 import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
 import com.hardskygames.luckycalories.list.models.CalorieModel;
@@ -25,6 +28,7 @@ import com.squareup.otto.Bus;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -37,8 +41,9 @@ import timber.log.Timber;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditCalorieFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener,
-        Toolbar.OnMenuItemClickListener{
+public class EditCalorieFragment extends DialogFragment implements Toolbar.OnMenuItemClickListener,
+        TimePickerDialog.OnTimeSetListener,
+        DatePickerDialog.OnDateSetListener{
 
     @Inject
     Bus bus;
@@ -50,12 +55,18 @@ public class EditCalorieFragment extends DialogFragment implements TimePickerDia
     AppCompatEditText txtMeal;
     @Bind(R.id.txtKCal)
     AppCompatEditText txtKCal;
+    @Bind(R.id.txtDate)
+    AppCompatEditText txtDate;
     @Bind(R.id.txtTime)
     AppCompatEditText txtTime;
     @Bind(R.id.txtNote)
     AppCompatEditText txtNote;
 
     private CalorieModel model = new CalorieModel();
+    private Calendar calendar = Calendar.getInstance();
+
+    private Date origEatTime;
+
 
     public EditCalorieFragment() {
         // Required empty public constructor
@@ -84,11 +95,21 @@ public class EditCalorieFragment extends DialogFragment implements TimePickerDia
         });
 
         if(model.getId() > 0) { //existed value; edit mode
+
             txtMeal.setText(model.getMeal());
             txtKCal.setText(String.format(Locale.US, "%.2f", model.getAmount()));
+            txtDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(model.getEatTime()));
             txtTime.setText(new SimpleDateFormat("HH:mm").format(model.getEatTime()));
             txtNote.setText(model.getNote());
+
+            calendar.setTime(model.getEatTime());
         }
+        else{
+            txtDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+            txtTime.setText(new SimpleDateFormat("HH:mm").format(calendar.getTime()));
+        }
+
+        origEatTime = model.getEatTime();
 
         return layout;
     }
@@ -123,19 +144,16 @@ public class EditCalorieFragment extends DialogFragment implements TimePickerDia
     public void onTimeClick(){
         FragmentManager fm = getChildFragmentManager();
         TimePickerFragment timeDialog = new TimePickerFragment();
+        timeDialog.setCalendar(calendar);
         timeDialog.show(fm, "fragment_edit_time");
     }
 
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Calendar cl = Calendar.getInstance();
-        cl.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        cl.set(Calendar.MINUTE, minute);
-
-        model.setEatTime(cl.getTime());
-
-        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        txtTime.setText(timeFormat.format(model.getEatTime()));
+    @OnClick(R.id.btnDate)
+    public void onDateClick(){
+        FragmentManager fm = getChildFragmentManager();
+        DatePickerFragment dateDialog = new DatePickerFragment();
+        dateDialog.setCalendar(calendar);
+        dateDialog.show(fm, "fragment_edit_date");
     }
 
     /**
@@ -146,11 +164,12 @@ public class EditCalorieFragment extends DialogFragment implements TimePickerDia
         try{
             model.setMeal(txtMeal.getText().toString());
             model.setAmount(Float.parseFloat(txtKCal.getText().toString()));
-            model.setEatTime(new SimpleDateFormat("HH:mm").parse(txtTime.getText().toString()));
+            model.setEatTime(calendar.getTime());
             model.setNote(txtNote.getText().toString());
 
             EditCalorieEvent ev = new EditCalorieEvent();
             ev.model = model;
+            ev.origEatTime = origEatTime;
 
             model = null;
 
@@ -165,4 +184,23 @@ public class EditCalorieFragment extends DialogFragment implements TimePickerDia
 
         return false;
     }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        txtDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        txtTime.setText(timeFormat.format(calendar.getTime()));
+    }
+
 }

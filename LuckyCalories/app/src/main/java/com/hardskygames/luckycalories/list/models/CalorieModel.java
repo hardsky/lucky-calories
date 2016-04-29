@@ -2,6 +2,7 @@ package com.hardskygames.luckycalories.list.models;
 
 import com.hardskygames.luckycalories.list.ICalorieListItem;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -20,6 +21,7 @@ public class CalorieModel implements ICalorieListItem, IColorSubscriber {
     private DailyCalorie daily;
     private IColorSubscriber colorSubscriber;
     private int currentColor;
+    private Date eatDate;
 
     public long getId() {
         return id;
@@ -51,6 +53,10 @@ public class CalorieModel implements ICalorieListItem, IColorSubscriber {
 
     public void setAmount(float amount) {
         this.amount = amount;
+
+        if(daily != null){
+            daily.change();
+        }
     }
 
     public Date getEatTime() {
@@ -59,6 +65,15 @@ public class CalorieModel implements ICalorieListItem, IColorSubscriber {
 
     public void setEatTime(Date eatTime) {
         this.eatTime = eatTime;
+
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(eatTime);
+        cl.set(Calendar.HOUR_OF_DAY, 0);
+        cl.set(Calendar.MINUTE, 0);
+        cl.set(Calendar.SECOND, 0);
+        cl.set(Calendar.MILLISECOND, 0);
+
+        this.eatDate = cl.getTime();
     }
 
 
@@ -105,5 +120,29 @@ public class CalorieModel implements ICalorieListItem, IColorSubscriber {
         currentColor = IColorSubscriber.ALERT_COLOR;
         if(colorSubscriber != null)
             colorSubscriber.notifyRed();
+    }
+
+    //should be consistent with comparator
+    //see http://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/TreeMultimap.html
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+
+        if(! (o instanceof CalorieModel))
+            return false;
+
+        CalorieModel other = (CalorieModel)o;
+        return meal.equals(other.meal)
+                && Math.abs(amount- other.amount) < 0.01
+                && eatTime.equals(other.eatTime);
+    }
+
+    /**
+     * return eat time without hours, minutes etc.
+     * allow to link with eat day
+     */
+    public Date getEatDate(){
+        return eatDate;
     }
 }

@@ -14,10 +14,11 @@ public class DailyCalorie implements ICalorieListItem {
 
     private final float dailyNorm;
     private Date date;
-    private float calories;
+    private float total;
     private List<IColorSubscriber> listeners = new ArrayList<>(10);
 
     private int currentColor = IColorSubscriber.NORMAl_COLOR;
+    private List<CalorieModel> calories = new ArrayList<>(10);
 
 
     public DailyCalorie(float dailyNorm){
@@ -32,8 +33,8 @@ public class DailyCalorie implements ICalorieListItem {
         this.date = date;
     }
 
-    public float getCalories() {
-        return calories;
+    public float getTotal() {
+        return total;
     }
 
     public static boolean isNewDate(long prev, long next){
@@ -50,10 +51,11 @@ public class DailyCalorie implements ICalorieListItem {
 
     public void add(CalorieModel calorieModel) {
         calorieModel.setDaily(this);
-        this.calories += calorieModel.getAmount();
+        this.total += calorieModel.getAmount();
         this.listeners.add(calorieModel);
+        this.calories.add(calorieModel);
 
-        if(calories > dailyNorm && currentColor == IColorSubscriber.NORMAl_COLOR){
+        if(total > dailyNorm && currentColor == IColorSubscriber.NORMAl_COLOR){
             currentColor = IColorSubscriber.ALERT_COLOR;
             for(IColorSubscriber sub: listeners){
                 sub.notifyRed();
@@ -72,15 +74,43 @@ public class DailyCalorie implements ICalorieListItem {
 
     public void remove(CalorieModel calorieModel){
         calorieModel.setDaily(null);
-        this.calories -= calorieModel.getAmount();
+        this.total -= calorieModel.getAmount();
         this.listeners.remove(calorieModel);
+        this.calories.remove(calorieModel);
 
-        if(calories <= dailyNorm && currentColor == IColorSubscriber.ALERT_COLOR){
+        if(total <= dailyNorm && currentColor == IColorSubscriber.ALERT_COLOR){
             currentColor = IColorSubscriber.NORMAl_COLOR;
             for(IColorSubscriber sub: listeners){
                 sub.notifyGreen();
             }
         }
+    }
+
+    private void notifyColor(){
+        if(total > dailyNorm && currentColor == IColorSubscriber.NORMAl_COLOR){
+            currentColor = IColorSubscriber.ALERT_COLOR;
+            for(IColorSubscriber sub: listeners){
+                sub.notifyRed();
+            }
+
+            return;
+        }
+
+        if(total <= dailyNorm && currentColor == IColorSubscriber.ALERT_COLOR){
+            currentColor = IColorSubscriber.NORMAl_COLOR;
+            for(IColorSubscriber sub: listeners){
+                sub.notifyGreen();
+            }
+        }
+    }
+
+    public void change(){
+        total = 0f;
+        for(CalorieModel calorie: calories){
+            total += calorie.getAmount();
+        }
+
+        notifyColor();
     }
 
     @Override
@@ -101,5 +131,19 @@ public class DailyCalorie implements ICalorieListItem {
     @Override
     public void unregister(IColorSubscriber colorSubscriber) {
         this.listeners.remove(colorSubscriber);
+    }
+
+    //should be consistent with comparator
+    //see http://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/TreeMultimap.html
+    @Override
+    public boolean equals(Object o) {
+        if(o == this)
+            return true;
+
+        if(! (o instanceof DailyCalorie))
+            return false;
+
+        DailyCalorie other = (DailyCalorie)o;
+        return date.equals(other.date);
     }
 }

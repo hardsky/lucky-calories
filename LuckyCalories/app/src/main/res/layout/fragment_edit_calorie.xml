@@ -13,51 +13,80 @@
         android:minHeight="?attr/actionBarSize">
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.AppCompatEditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:ems="10"
-        android:id="@+id/txtMeal"
-        android:hint="@string/fragment_edit_meal"/>
-
-    <android.support.v7.widget.AppCompatEditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/txtKCal"
-        android:hint="@string/fragment_edit_kcal"/>
-
     <android.support.v7.widget.LinearLayoutCompat
-        android:baselineAligned="false"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+        <android.support.v7.widget.AppCompatEditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/txtMeal"
+            android:hint="@string/fragment_edit_meal"/>
 
         <android.support.v7.widget.AppCompatEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="time"
+            android:inputType="number"
             android:ems="10"
-            android:id="@+id/txtTime"
-            android:hint="@string/fragment_edit_time"/>
+            android:id="@+id/txtKCal"
+            android:hint="@string/fragment_edit_kcal"/>
 
-        <ImageButton
-            android:id="@+id/btnTime"
-            android:src="@drawable/ic_today_black_24dp"
-            android:padding="@null"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+        <android.support.v7.widget.LinearLayoutCompat
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="time"
+                android:ems="10"
+                android:id="@+id/txtDate"
+                android:hint="@string/fragment_edit_date"/>
+
+            <ImageButton
+                android:id="@+id/btnDate"
+                android:src="@drawable/ic_today_black_24dp"
+                android:padding="@null"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="time"
+                android:ems="10"
+                android:id="@+id/txtTime"
+                android:hint="@string/fragment_edit_time"/>
+
+            <ImageButton
+                android:id="@+id/btnTime"
+                android:src="@drawable/ic_alarm_black_24dp"
+                android:padding="@null"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <android.support.v7.widget.AppCompatEditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/txtNote"
+            android:hint="@string/fragment_edit_comments"/>
 
     </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v7.widget.AppCompatEditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/txtNote"
-        android:hint="@string/fragment_edit_comments"/>
-
 </android.support.v7.widget.LinearLayoutCompat>

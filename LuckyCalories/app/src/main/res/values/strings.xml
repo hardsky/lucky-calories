@@ -21,6 +21,7 @@
     <string name="fragment_edit_meal">Meal</string>
     <string name="fragment_edit_kcal">Calories (kcal)</string>
     <string name="fragment_edit_time">Time</string>
+    <string name="fragment_edit_date">Date</string>
     <string name="fragment_edit_comments">Comments</string>
 
 </resources>
