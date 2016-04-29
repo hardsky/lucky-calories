@@ -102,7 +102,7 @@ public class CaloriesListFragment extends BaseFragment {
 
                 @Override
                 public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                    CalorieModel model = ((CommentItemViewHolder)viewHolder).getData();
+                    CalorieModel model = ((MealItemViewHolder)viewHolder).getData();
                     Date eatDate = model.getEatDate();
 
                     int position = viewHolder.getAdapterPosition();
@@ -262,10 +262,12 @@ public class CaloriesListFragment extends BaseFragment {
             }
             else{ //add item
                 DailyCalorie dailyCalorie = dailies.get(calorieModel.getEatDate());
-                float prevTotal = dailyCalorie.getTotal();
-                dailies.get(calorieModel.getEatDate()).add(calorieModel);
+                dailyCalorie.add(calorieModel);
+                int dailyPos = getSubHeaderPosition(calorieModel.getEatDate());
+
                 calories.put(calorieModel.getEatDate(), calorieModel);
                 adapter.notifyItemInserted(getCaloriePosition(calorieModel));
+                adapter.notifyItemChanged(dailyPos);
             }
 
             //lastDate for get paged list of calories
@@ -452,7 +454,7 @@ public class CaloriesListFragment extends BaseFragment {
             if(viewType == MEAL_ITEM){
                 View v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.view_calorie_item, parent, false);
-                return new CommentItemViewHolder(v);
+                return new MealItemViewHolder(v);
             }
             else{
                 View v = LayoutInflater.from(parent.getContext())
@@ -468,7 +470,7 @@ public class CaloriesListFragment extends BaseFragment {
                 return;
 
             if(getItemViewType(position) == MEAL_ITEM){
-                CommentItemViewHolder viewHolder = (CommentItemViewHolder) holder;
+                MealItemViewHolder viewHolder = (MealItemViewHolder) holder;
                 viewHolder.setData(getCalorie(position));
             }
             else{
@@ -520,7 +522,7 @@ public class CaloriesListFragment extends BaseFragment {
         }
     }
 
-    private class CommentItemViewHolder extends RecyclerView.ViewHolder
+    private class MealItemViewHolder extends RecyclerView.ViewHolder
             implements View.OnLongClickListener, IColorSubscriber {
 
         public TextView txtMeal;
@@ -530,7 +532,7 @@ public class CaloriesListFragment extends BaseFragment {
 
         private CalorieModel calorie;
 
-        public CommentItemViewHolder(View itemView) {
+        public MealItemViewHolder(View itemView) {
             super(itemView);
 
             txtMeal = ButterKnife.findById(itemView, R.id.txtMeal);

@@ -46,7 +46,6 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
     private void setCalories(){
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
         calendar.set(Calendar.MINUTE, 14);
 
         calendar.set(Calendar.HOUR_OF_DAY, 22);

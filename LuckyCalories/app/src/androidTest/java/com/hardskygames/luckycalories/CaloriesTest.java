@@ -113,4 +113,43 @@ public class CaloriesTest {
                 .check(matches(withText("1220 kcal")));
     }
 
+    @Test
+    public void afterAddCalorieTotalIncreased(){
+
+        String totalBefore = "1200 kcal";
+        String totalAfter = "1400 kcal";
+
+        onView(withId(R.id.progressBar))
+                .check(matches(not(isDisplayed())));
+
+
+        onView(new RecyclerViewMatcher(R.id.listCalories)
+                .atPositionOnView(0, R.id.txtTotal))
+                .check(matches(withText(totalBefore)));
+
+        onView(withId(R.id.btnAdd))
+                .perform(click());
+
+        onView(withId(R.id.txtMeal))
+                .perform(typeText("test"));
+
+        onView(withId(R.id.txtKCal))
+                .perform(clearText())
+                .perform(typeText("200"));
+
+        onView(withId(R.id.save))
+                .perform(click());
+
+        try {
+            Thread.sleep(500, 0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(new RecyclerViewMatcher(R.id.listCalories)
+                .atPositionOnView(0, R.id.txtTotal))
+                .check(matches(withText("1400 kcal")));
+
+    }
+
 }
