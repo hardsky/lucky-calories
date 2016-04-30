@@ -83,8 +83,8 @@ public class EditCalorieFragment extends DialogFragment implements Toolbar.OnMen
         View layout = inflater.inflate(R.layout.fragment_edit_calorie, container, false);
         ButterKnife.bind(this, layout);
 
-        toolbar.setTitle("Edit");
-        toolbar.setNavigationIcon(R.drawable.ic_keyboard_backspace_white_24dp);
+        toolbar.setTitle(model.getId() > 0 ? "Edit" : "New");
+        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolbar.inflateMenu(R.menu.dialog_toolbar_menu);
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

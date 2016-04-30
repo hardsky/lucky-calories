@@ -281,25 +281,31 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
         callList.enqueue(new Callback<List<io.swagger.client.model.Calorie>>() {
             @Override
             public void onResponse(Call<List<io.swagger.client.model.Calorie>> call, Response<List<io.swagger.client.model.Calorie>> response) {
-                List<io.swagger.client.model.Calorie> list =  response.body();
-                if(list != null && !list.isEmpty()) {
-                    int entryCount = adapter.getItemCount();
+                if(response.isSuccessful()) {
+                    List<io.swagger.client.model.Calorie> list = response.body();
+                    if (list != null && !list.isEmpty()) {
+                        int entryCount = adapter.getItemCount();
 
-                    for (io.swagger.client.model.Calorie respCl : list) {
-                        CalorieModel calorie = caloriesTransformer.transform(respCl, CalorieModel.class);
-                        if(!dailies.containsKey(calorie.getEatDate())){
-                            DailyCalorie dailyCalorie = new DailyCalorie(user.getDailyCalories());
-                            dailyCalorie.setDate(calorie.getEatDate());
+                        for (io.swagger.client.model.Calorie respCl : list) {
+                            CalorieModel calorie = caloriesTransformer.transform(respCl, CalorieModel.class);
+                            if (!dailies.containsKey(calorie.getEatDate())) {
+                                DailyCalorie dailyCalorie = new DailyCalorie(user.getDailyCalories());
+                                dailyCalorie.setDate(calorie.getEatDate());
 
-                            dailies.put(dailyCalorie.getDate(), dailyCalorie);
+                                dailies.put(dailyCalorie.getDate(), dailyCalorie);
+                            }
+
+                            dailies.get(calorie.getEatDate()).add(calorie);
+                            calories.put(calorie.getEatDate(), calorie);
                         }
 
-                        dailies.get(calorie.getEatDate()).add(calorie);
-                        calories.put(calorie.getEatDate(), calorie);
-                    }
 
-                    lastDate = list.get(list.size() - 1).getEatTime();
-                    adapter.notifyItemRangeInserted(entryCount, list.size());
+                        lastDate = list.get(list.size() - 1).getEatTime();
+                        adapter.notifyItemRangeInserted(entryCount, list.size());
+                    }
+                }
+                else{
+                    Timber.e("Error on request calories list: %s", response.errorBody());
                 }
 
                 addScrollListener();

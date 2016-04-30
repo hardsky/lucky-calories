@@ -16,6 +16,7 @@ import com.hardskygames.luckycalories.calories.CaloriesListFragment;
 import com.hardskygames.luckycalories.calories.EditCalorieFragment;
 import com.hardskygames.luckycalories.calories.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.UserListFragment;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -49,6 +50,8 @@ public class MainActivity extends BaseActivity {
     CaloriesListFragment caloriesListFragment;
     @Inject
     CaloriesFilterListFragment caloriesFilterListFragment;
+    @Inject
+    UserListFragment userListFragment;
 
     int[] menuTitles;
 
@@ -67,6 +70,7 @@ public class MainActivity extends BaseActivity {
         menuTitles = new int[]{
                 R.string.menu_main_calories,
                 R.string.menu_main_filters,
+                R.string.menu_main_users,
                 R.string.menu_main_settings
         };
 
@@ -98,7 +102,11 @@ public class MainActivity extends BaseActivity {
                                 .withIcon(R.drawable.ic_filter_list_black_24dp),
                         new PrimaryDrawerItem()
                                 .withName(menuTitles[2])
+                                .withIcon(R.drawable.ic_filter_list_black_24dp),
+                        new PrimaryDrawerItem()
+                                .withName(menuTitles[3])
                                 .withIcon(R.drawable.ic_settings_black_24dp)
+                                .withSetSelected(false)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -113,6 +121,10 @@ public class MainActivity extends BaseActivity {
                                 createFilterScreen();
                                 break;
                             case 3:
+                                toolbar.setTitle(menuTitles[position - 1]);
+                                createUsersScreen();
+                                break;
+                            case 4:
                                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
                             default:
@@ -172,6 +184,21 @@ public class MainActivity extends BaseActivity {
         transaction.commit();
 
         cur = caloriesFilterListFragment;
+    }
+
+    private void createUsersScreen(){
+        if(cur == userListFragment)
+            return;
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if(cur != null){
+            transaction.remove(cur);
+        }
+        transaction.add(R.id.container, userListFragment);
+        transaction.commit();
+
+        cur = userListFragment;
     }
 
     @Subscribe

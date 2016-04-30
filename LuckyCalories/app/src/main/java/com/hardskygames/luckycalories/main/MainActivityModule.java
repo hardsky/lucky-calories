@@ -4,6 +4,8 @@ import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.calories.CaloriesFilterListFragment;
 import com.hardskygames.luckycalories.calories.CaloriesListFragment;
 import com.hardskygames.luckycalories.calories.EditCalorieFragment;
+import com.hardskygames.luckycalories.users.EditUserFragment;
+import com.hardskygames.luckycalories.users.UserListFragment;
 
 import dagger.Module;
 
@@ -15,7 +17,9 @@ import dagger.Module;
                 MainActivity.class,
                 CaloriesListFragment.class,
                 EditCalorieFragment.class,
-                CaloriesFilterListFragment.class
+                CaloriesFilterListFragment.class,
+                UserListFragment.class,
+                EditUserFragment.class
         },
         addsTo = com.hardskygames.luckycalories.LuckyCaloriesAppModule.class,
         library = true

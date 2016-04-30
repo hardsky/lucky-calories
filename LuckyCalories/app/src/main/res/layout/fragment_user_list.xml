@@ -21,7 +21,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"
-        app:layout_anchor="@id/listCalories"
+        app:layout_anchor="@id/listUsers"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_behavior="com.hardskygames.luckycalories.common.ScrollAwareFABBehavior"/>
 

@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -42,6 +43,42 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
         calories = new ArrayList<>(10);
         setCalories();
+        setUsers();
+    }
+
+    private void setUsers() {
+        User user = new User();
+        user.setId(1L);
+        user.setName("Test1");
+        user.setEmail("test1@test.test");
+        user.setDailyCalories(2200f);
+        user.setUserType(1);
+        users.put(user.getEmail(), user);
+
+        user = new User();
+        user.setId(2L);
+        user.setName("Test2");
+        user.setEmail("test2@test.test");
+        user.setDailyCalories(2500f);
+        user.setUserType(1);
+        users.put(user.getEmail(), user);
+
+        user = new User();
+        user.setId(3L);
+        user.setName("Test3");
+        user.setEmail("test3@test.test");
+        user.setDailyCalories(2800f);
+        user.setUserType(1);
+        users.put(user.getEmail(), user);
+
+        user = new User();
+        user.setId(4L);
+        user.setName("Test4");
+        user.setEmail("test4@test.test");
+        user.setDailyCalories(3000f);
+        user.setUserType(1);
+        users.put(user.getEmail(), user);
+
     }
 
     private void setCalories(){
@@ -96,7 +133,9 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
     @Override
     public Call<User> createUser(@Body User user) {
-        return null;
+        users.put(user.getEmail(), user);
+        user.setId((long)users.size());
+        return delegate.returningResponse(user).createUser(user);
     }
 
     @Override
@@ -138,8 +177,14 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
     }
 
     @Override
-    public Call<Void> deleteUser(@Path("id") Long id) {
-        return null;
+    public Call<Void> deleteUser(@Path("id") final Long id) {
+        Iterables.removeIf(users.values(), new Predicate<User>() {
+            @Override
+            public boolean apply(User input) {
+                return input.getId().equals(id);
+            }
+        });
+        return delegate.returningResponse(null).deleteUser(id);
     }
 
     @Override
@@ -178,7 +223,8 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
     @Override
     public Call<List<User>> getUserList(@Query("last") String last) {
-        return null;
+
+        return delegate.returningResponse(last == null ? new ArrayList<>(users.values()): new ArrayList<>()).getUserList(last);
     }
 
     @Override
@@ -191,9 +237,11 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         User user = new User();
         user.setEmail(info.getEmail());
         user.setName(info.getName());
+        user.setDailyCalories(2200f);
         user.setUserType(1);
 
         users.put(user.getEmail(), user);
+        user.setId((long)users.size());
 
         String res = "access_token";
         return delegate.returningResponse(res).signup(info);
@@ -201,7 +249,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
     @Override
     public Call<User> updateUser(@Body User user) {
-        return null;
+        return delegate.returningResponse(user).updateUser(user);
     }
 
     @Override

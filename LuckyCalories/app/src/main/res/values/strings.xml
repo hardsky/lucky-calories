@@ -16,6 +16,7 @@
     <string name="menu_main_calories">Calories</string>
     <string name="menu_main_filters">Filters</string>
     <string name="menu_main_settings">Settings</string>
+    <string name="menu_main_users">Users</string>
 
     <string name="save">SAVE</string>
     <string name="fragment_edit_meal">Meal</string>
