@@ -120,6 +120,24 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
     }
 
     @Override
+    public Call<List<Calorie>> getUserCaloriesFilter(@Path("id") Long id, @Query("last") final Long last, @Query("fromDate") Long fromDate, @Query("toDate") Long toDate, @Query("fromTime") Long fromTime, @Query("toTime") Long toTime) {
+        List<Calorie> res;
+        if(last == 0){
+            res = calories;
+        }
+        else {
+            res = new ArrayList<>(Collections2.filter(calories, new Predicate<Calorie>() {
+                @Override
+                public boolean apply(Calorie input) {
+                    return input.getEatTime() < last;
+                }
+            }));
+        }
+
+        return delegate.returningResponse(res).getUserCaloriesFilter(id, last, fromDate, toDate, fromTime, toTime);
+    }
+
+    @Override
     public Call<Void> deleteUser(@Path("id") Long id) {
         return null;
     }

@@ -147,6 +147,61 @@ paths:
       security:
       - access_token: []
       x-swagger-router-controller: "Default"
+  /user/{id}/calories/filter:
+    get:
+      description: "Get paged calories list for user.\nPaged by 100 meals.\nOrdered\
+        \ by eat time (from now to past (closest to current time is first in list)).\n\
+        With applied filter by dates from-to, time from-to \n(e.g. how much calories\
+        \ have I had for lunch each day in the last month, if lunch is between 12\
+        \ and 15h).\n"
+      operationId: "getUserCaloriesFilter"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "user Id"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "last"
+        in: "query"
+        description: "eat time of last meal from previous page"
+        required: false
+        type: "integer"
+        format: "int64"
+      - name: "fromDate"
+        in: "query"
+        required: false
+        type: "integer"
+        format: "int64"
+      - name: "toDate"
+        in: "query"
+        required: false
+        type: "integer"
+        format: "int64"
+      - name: "fromTime"
+        in: "query"
+        required: false
+        type: "integer"
+        format: "int64"
+      - name: "toTime"
+        in: "query"
+        required: false
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Callorie list (page)."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Calorie"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - access_token: []
+      x-swagger-router-controller: "Default"
   /user/{id}/calories/{calorieId}:
     delete:
       description: "Delete entry from calories list for user.\n"

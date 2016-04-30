@@ -10,33 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.google.common.collect.Ordering;
-import com.google.common.collect.TreeMultimap;
-import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
 import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
 import com.hardskygames.luckycalories.list.models.CalorieModel;
 import com.hardskygames.luckycalories.list.models.DailyCalorie;
-import com.hardskygames.luckycalories.list.models.IColorSubscriber;
-import com.hardskygames.luckycalories.list.models.OrderingCalorie;
 import com.hardskygames.luckycalories.models.User;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.NavigableSet;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -53,10 +41,7 @@ import timber.log.Timber;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CaloriesListFragment extends BaseFragment {
-
-    private static final int MEAL_ITEM = 1;
-    private static final int DAILY_ITEM = 2;
+public class CaloriesListFragment extends BaseCalorieListFragment {
 
     @Inject
     LuckyCaloriesApi api;
@@ -70,19 +55,10 @@ public class CaloriesListFragment extends BaseFragment {
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
-    private TreeMultimap<Date, CalorieModel> calories
-            = TreeMultimap.create(Ordering.<Date>natural().reverse(), new OrderingCalorie());
-    private SortedMap<Date, DailyCalorie> dailies
-            = new TreeMap<>(Ordering.<Date>natural().reverse());
 
     private LinearLayoutManager layoutManager;
     private CaloriesAdapter adapter;
     private EndlessRecyclerOnScrollListener scrollListener;
-
-    private long lastDate = 0;
-    private Call<List<io.swagger.client.model.Calorie>> callList;
-
-    private Transformer caloriesTransformer;
 
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
             new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -136,15 +112,12 @@ public class CaloriesListFragment extends BaseFragment {
         View layout = inflater.inflate(R.layout.fragment_calories_list, container, false);
         ButterKnife.bind(this, layout);
 
+        calorieAlertLevel = user.getDailyCalories();
         layoutManager = new LinearLayoutManager(getActivity());
         listLayout.setLayoutManager(layoutManager);
 
         adapter = new CaloriesAdapter();
         listLayout.setAdapter(adapter);
-
-        caloriesTransformer = new Transformer
-                .Builder()
-                .build(io.swagger.client.model.Calorie.class);
 
         scrollListener = new EndlessRecyclerOnScrollListener(layoutManager, 5) {
             @Override
@@ -179,7 +152,7 @@ public class CaloriesListFragment extends BaseFragment {
 
         super.onPause();
 
-        listLayout.clearOnScrollListeners();
+        listLayout.removeOnScrollListener(scrollListener);
         if(callList != null){
             callList.cancel();
             callList = null;
@@ -189,57 +162,6 @@ public class CaloriesListFragment extends BaseFragment {
     @OnClick(R.id.btnAdd)
     public void addNewCalorie(){
         bus.post(new AddCalorieEvent());
-    }
-
-    int getCaloriePosition(CalorieModel calorie){
-        SortedMap<Date, DailyCalorie> prevDailies = dailies.headMap(calorie.getEatDate());
-        int count = getContainedEntriesCount(prevDailies);
-        count += 1; //sub-header
-        NavigableSet<CalorieModel> dailyCalories = calories.get(calorie.getEatDate());
-        count +=  dailyCalories.headSet(calorie, true).size();
-
-        return count - 1;
-    }
-
-    int getSubHeaderPosition(DailyCalorie dailyCalorie) {
-        return getContainedEntriesCount(dailies.headMap(dailyCalorie.getDate()));
-    }
-
-    int getSubHeaderPosition(Date day) {
-        return getContainedEntriesCount(dailies.headMap(day));
-    }
-
-    private int getContainedEntriesCount(SortedMap<Date, DailyCalorie> dailies){
-        int count = 0;
-        for(Date day: dailies.keySet()){
-            ++count;
-            count += calories.get(day).size();
-        }
-
-        return count;
-    }
-
-    private boolean isSameDate(Date prev, Date changed){
-        Calendar cl1 = Calendar.getInstance();
-        cl1.setTime(prev);
-
-        Calendar cl2 = Calendar.getInstance();
-        cl1.setTime(changed);
-
-        return cl1.get(Calendar.YEAR) == cl2.get(Calendar.YEAR)
-                && cl1.get(Calendar.MONTH) == cl2.get(Calendar.MONTH)
-                && cl1.get(Calendar.DAY_OF_MONTH) == cl2.get(Calendar.DAY_OF_MONTH);
-    }
-
-    private Date getDate(Date time){
-        Calendar cl = Calendar.getInstance();
-        cl.setTime(time);
-        cl.set(Calendar.HOUR_OF_DAY, 0);
-        cl.set(Calendar.MINUTE, 0);
-        cl.set(Calendar.SECOND, 0);
-        cl.set(Calendar.MILLISECOND, 0);
-
-        return cl.getTime();
     }
 
     @Subscribe
@@ -394,173 +316,23 @@ public class CaloriesListFragment extends BaseFragment {
         });
     }
 
-    private CalorieModel getCalorie(int position){
+    private class CaloriesAdapter extends BaseCaloriesAdapter {
 
-        int count = 0;
-        for(Date day: dailies.keySet()){
-            ++count;
-            if(count + calories.get(day).size() > position) {
-                for(CalorieModel calorie: calories.get(day)){
-                    if(count == position)
-                        return calorie;
-
-                    ++count;
-                }
-            }
-            count += calories.get(day).size();
+        @Override
+        protected RecyclerView.ViewHolder onCreateMealViewHolder(ViewGroup parent, int viewType){
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.view_calorie_item, parent, false);
+            return new MealItemClickableViewHolder(v);
         }
-
-        return null;
     }
 
-    private DailyCalorie getDaily(int position){
+    private class MealItemClickableViewHolder extends MealItemViewHolder
+            implements View.OnLongClickListener {
 
-        int count = 0;
-        for(Date day: dailies.keySet()){
-            ++count;
-
-            if(count - 1 == position)
-                return dailies.get(day);
-
-            count += calories.get(day).size();
-        }
-
-        return null;
-    }
-
-    private class CaloriesAdapter extends RecyclerView.Adapter {
-
-        @Override
-        public int getItemViewType(int position) {
-            if(dailies.isEmpty())
-                return 0;
-
-            int count = 0;
-            for(Date day: dailies.keySet()){
-                ++count;
-                if(position == count - 1)
-                    return DAILY_ITEM;
-
-                count += calories.get(day).size();
-                if(count > position)
-                    return MEAL_ITEM;
-            }
-
-            return MEAL_ITEM;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if(viewType == MEAL_ITEM){
-                View v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.view_calorie_item, parent, false);
-                return new MealItemViewHolder(v);
-            }
-            else{
-                View v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.view_calorie_daily, parent, false);
-                return new DayItemViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-            if (dailies.isEmpty())
-                return;
-
-            if(getItemViewType(position) == MEAL_ITEM){
-                MealItemViewHolder viewHolder = (MealItemViewHolder) holder;
-                viewHolder.setData(getCalorie(position));
-            }
-            else{
-                DayItemViewHolder viewHolder = (DayItemViewHolder) holder;
-                viewHolder.setData(getDaily(position));
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return dailies.size() + calories.size();
-        }
-
-    }
-
-    private class DayItemViewHolder extends RecyclerView.ViewHolder implements IColorSubscriber{
-
-        public TextView txtDate;
-        public TextView txtTotal;
-
-        private DailyCalorie daily;
-
-        public DayItemViewHolder(View itemView) {
+        public MealItemClickableViewHolder(View itemView) {
             super(itemView);
-
-            txtDate = ButterKnife.findById(itemView, R.id.txtDate);
-            txtTotal = ButterKnife.findById(itemView, R.id.txtTotal);
-        }
-
-        public void setData(DailyCalorie data) {
-            DateFormat timeFormat = new SimpleDateFormat("dd MMM");
-
-            this.daily = data;
-
-            txtDate.setText(timeFormat.format(data.getDate()));
-            txtTotal.setText(String.format("%.0f kcal", data.getTotal()));
-
-            data.register(this);
-        }
-
-        @Override
-        public void notifyGreen() {
-            itemView.setBackgroundResource(R.color.md_green_400);
-        }
-
-        @Override
-        public void notifyRed() {
-            itemView.setBackgroundResource(R.color.md_red_400);
-        }
-    }
-
-    private class MealItemViewHolder extends RecyclerView.ViewHolder
-            implements View.OnLongClickListener, IColorSubscriber {
-
-        public TextView txtMeal;
-        public TextView txtKCal;
-        public TextView txtTime;
-        public TextView txtComment;
-
-        private CalorieModel calorie;
-
-        public MealItemViewHolder(View itemView) {
-            super(itemView);
-
-            txtMeal = ButterKnife.findById(itemView, R.id.txtMeal);
-            txtKCal = ButterKnife.findById(itemView, R.id.txtKCal);
-            txtTime = ButterKnife.findById(itemView, R.id.txtTime);
-            txtComment = ButterKnife.findById(itemView, R.id.txtComment);
-
-            notifyGreen();
 
             itemView.setOnLongClickListener(this);
-        }
-
-        public void setData(CalorieModel data) {
-            DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            //DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
-
-            this.calorie = data;
-
-            txtMeal.setText(calorie.getMeal());
-            txtKCal.setText(String.format("%.0f", calorie.getAmount()));
-            txtTime.setText(timeFormat.format(calorie.getEatTime()));
-            txtComment.setText(calorie.getNote());
-
-            data.register(this);
-        }
-
-        public CalorieModel getData(){
-            return calorie;
         }
 
         @Override
@@ -570,16 +342,6 @@ public class CaloriesListFragment extends BaseFragment {
             bus.post(ev);
 
             return true;
-        }
-
-        @Override
-        public void notifyGreen() {
-            itemView.setBackgroundResource(R.color.md_green_400);
-        }
-
-        @Override
-        public void notifyRed() {
-            itemView.setBackgroundResource(R.color.md_red_400);
         }
     }
 

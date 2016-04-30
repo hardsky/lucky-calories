@@ -1,0 +1,145 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+tools:context="com.hardskygames.luckycalories.list.CaloriesFilterListFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
+            android:id="@+id/filterContainer"
+            android:background="@android:color/white"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+
+            <LinearLayout
+                android:id="@+id/dateContainer"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="From Date"
+                    android:id="@+id/txtFromDate" />
+                <ImageButton
+                    android:layout_marginLeft="8dp"
+                    android:id="@+id/btnFromDate"
+                    android:src="@drawable/ic_today_black_24dp"
+                    android:padding="@null"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/txtBetweenDates" />
+
+                <TextView
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="To Date"
+                    android:id="@+id/txtToDate" />
+                <ImageButton
+                    android:layout_marginLeft="8dp"
+                    android:id="@+id/btnToDate"
+                    android:src="@drawable/ic_today_black_24dp"
+                    android:padding="@null"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_below="@id/dateContainer"
+                android:id="@+id/timeContainer"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="From Time"
+                    android:id="@+id/txtFromTime" />
+                <ImageButton
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/btnFromTime"
+                    android:src="@drawable/ic_today_black_24dp"
+                    android:padding="@null"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/txtBetweenTimes" />
+
+                <TextView
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="To Time"
+                    android:id="@+id/txtToTime" />
+                <ImageButton
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/btnToTime"
+                    android:src="@drawable/ic_today_black_24dp"
+                    android:padding="@null"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+            </LinearLayout>
+
+            <Button
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filter"
+                android:id="@+id/btnFilter" />
+
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/listCalories"
+    android:background="#e2e2e2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+
+</android.support.v7.widget.RecyclerView>
+
+
+<ProgressBar
+    android:id="@+id/progressBar"
+    style="@style/Widget.AppCompat.ProgressBar"
+    android:layout_gravity="bottom|center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:indeterminateOnly="true"
+    android:visibility="invisible" />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -145,6 +145,7 @@ public class EditCalorieFragment extends DialogFragment implements Toolbar.OnMen
         FragmentManager fm = getChildFragmentManager();
         TimePickerFragment timeDialog = new TimePickerFragment();
         timeDialog.setCalendar(calendar);
+        timeDialog.setListener(this);
         timeDialog.show(fm, "fragment_edit_time");
     }
 
@@ -153,6 +154,7 @@ public class EditCalorieFragment extends DialogFragment implements Toolbar.OnMen
         FragmentManager fm = getChildFragmentManager();
         DatePickerFragment dateDialog = new DatePickerFragment();
         dateDialog.setCalendar(calendar);
+        dateDialog.setListener(this);
         dateDialog.show(fm, "fragment_edit_date");
     }
 

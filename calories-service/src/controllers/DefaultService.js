@@ -105,6 +105,38 @@ exports.getUser = function(args, res, next) {
   
 }
 
+exports.getUserCaloriesFilter = function(args, res, next) {
+  /**
+   * parameters expected in the args:
+  * id (Long)
+  * last (Long)
+  * fromDate (Long)
+  * toDate (Long)
+  * fromTime (Long)
+  * toTime (Long)
+  **/
+  
+  
+  var examples = {};
+  examples['application/json'] = [ {
+  "meal" : "aeiou",
+  "eatTime" : 123456789,
+  "note" : "aeiou",
+  "amount" : 1.3579000000000001069366817318950779736042022705078125,
+  "id" : 123456789
+} ];
+  
+  if(Object.keys(examples).length > 0) {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+  }
+  else {
+    res.end();
+  }
+  
+  
+}
+
 exports.getUserCaloriesList = function(args, res, next) {
   /**
    * parameters expected in the args:

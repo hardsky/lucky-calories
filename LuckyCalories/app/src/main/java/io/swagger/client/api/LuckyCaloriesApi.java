@@ -47,7 +47,6 @@ public interface LuckyCaloriesApi {
           @Path("id") Long id, @Body Calorie calorie
   );
 
-  
   /**
    * 
    * Delete user.\n
@@ -101,7 +100,23 @@ public interface LuckyCaloriesApi {
           @Path("id") Long id, @Query("last") Long last
   );
 
-  
+  /**
+   *
+   * Get paged calories list for user.\nPaged by 100 meals.\nOrdered by eat time (from now to past (closest to current time is first in list)).\nWith applied filter by dates from-to, time from-to \n(e.g. how much calories have I had for lunch each day in the last month, if lunch is between 12 and 15h).\n
+   * @param id user Id (required)
+   * @param last eat time of last meal from previous page (optional)
+   * @param fromDate  (optional)
+   * @param toDate  (optional)
+   * @param fromTime  (optional)
+   * @param toTime  (optional)
+   * @return Call<List<Calorie>>
+   */
+
+  @GET("user/{id}/calories/filter")
+  Call<List<Calorie>> getUserCaloriesFilter(
+          @Path("id") Long id, @Query("last") Long last, @Query("fromDate") Long fromDate, @Query("toDate") Long toDate, @Query("fromTime") Long fromTime, @Query("toTime") Long toTime
+  );
+
   /**
    * 
    * Get user list.\nPaged by 100 users.\nOrdered by alphabeticaly.\n

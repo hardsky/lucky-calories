@@ -43,6 +43,8 @@ public class CaloriesActivity extends BaseActivity {
 
     @Inject
     CaloriesListFragment caloriesListFragment;
+    @Inject
+    CaloriesFilterListFragment caloriesFilterListFragment;
 
     int[] menuTitles;
 
@@ -103,6 +105,7 @@ public class CaloriesActivity extends BaseActivity {
                                 createCaloriesScreen();
                                 break;
                             case 2:
+                                createFilterScreen();
                                 break;
                             case 3:
                                 break;
@@ -148,6 +151,21 @@ public class CaloriesActivity extends BaseActivity {
         transaction.commit();
 
         cur = caloriesListFragment;
+    }
+
+    private void createFilterScreen(){
+        if(cur == caloriesFilterListFragment)
+            return;
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if(cur != null){
+            transaction.remove(cur);
+        }
+        transaction.add(R.id.container, caloriesFilterListFragment);
+        transaction.commit();
+
+        cur = caloriesFilterListFragment;
     }
 
     @Subscribe

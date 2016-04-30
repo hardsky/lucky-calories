@@ -161,7 +161,58 @@ paths:
             $ref: '#/definitions/Error'
       security:
         - access_token: []
-            
+
+  /user/{id}/calories/filter:
+    get:
+      description: |
+        Get paged calories list for user.
+        Paged by 100 meals.
+        Ordered by eat time (from now to past (closest to current time is first in list)).
+        With applied filter by dates from-to, time from-to 
+        (e.g. how much calories have I had for lunch each day in the last month, if lunch is between 12 and 15h).
+      operationId: getUserCaloriesFilter
+      parameters:
+        - name: id
+          in: path
+          description: user Id
+          type: integer
+          format: int64
+          required: true
+        - name: last
+          in: query
+          description: eat time of last meal from previous page
+          type: integer
+          format: int64
+        - name: fromDate
+          in: query
+          type: integer
+          format: int64
+        - name: toDate
+          in: query
+          type: integer
+          format: int64
+        - name: fromTime
+          in: query
+          type: integer
+          format: int64
+        - name: toTime
+          in: query
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Callorie list (page).
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Calorie"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - access_token: []
+
   /user/{id}/calories/{calorieId}:
     delete:
       description: |
@@ -372,22 +423,3 @@ definitions:
           User - would only be able to CRUD on his owned records.  
           Manager - same as User + would able to CRUD users  
           Admin - same as Manager + would able to CRUD everything
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

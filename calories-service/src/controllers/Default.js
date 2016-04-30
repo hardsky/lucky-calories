@@ -26,6 +26,10 @@ module.exports.getUser = function getUser (req, res, next) {
   Default.getUser(req.swagger.params, res, next);
 };
 
+module.exports.getUserCaloriesFilter = function getUserCaloriesFilter (req, res, next) {
+  Default.getUserCaloriesFilter(req.swagger.params, res, next);
+};
+
 module.exports.getUserCaloriesList = function getUserCaloriesList (req, res, next) {
   Default.getUserCaloriesList(req.swagger.params, res, next);
 };
