@@ -34,6 +34,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.swagger.client.api.LuckyCaloriesApi;
 import io.swagger.client.model.Calorie;
 import io.swagger.client.model.User;
@@ -245,6 +246,11 @@ public class UserListFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    @OnClick(R.id.btnAdd)
+    public void addUser(){
+        openUserEditDlg(null);
     }
 
     class UsersAdapter extends RecyclerView.Adapter<UserViewHolder>{
