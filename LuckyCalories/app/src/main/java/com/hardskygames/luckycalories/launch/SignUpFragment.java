@@ -13,9 +13,10 @@ import android.widget.ProgressBar;
 
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
+import com.hardskygames.luckycalories.admin.AdminActivity;
 import com.hardskygames.luckycalories.launch.models.SignUp;
 import com.hardskygames.luckycalories.main.MainActivity;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 
 import java.lang.ref.WeakReference;
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import io.swagger.client.api.LuckyCaloriesApi;
+import io.swagger.client.model.AuthInfo;
 import io.swagger.client.model.SignUpInfo;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,7 +58,7 @@ public class SignUpFragment extends BaseFragment {
     @Inject
     UserModel user;
 
-    private Call<String> signUpCall;
+    private Call<AuthInfo> signUpCall;
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -110,28 +112,47 @@ public class SignUpFragment extends BaseFragment {
         overlayDialog.setCancelable(false);
         overlayDialog.show();
 
-        signUpCall.enqueue(new Callback<String>() {
+        signUpCall.enqueue(new Callback<AuthInfo>() {
 
             WeakReference<SignUpFragment> fragmentReference
                     = new WeakReference<>(SignUpFragment.this);
 
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                user.setName(signUpInfo.getName());
-                user.setEmail(signUpInfo.getEmail());
-                user.setAccessToken(response.body());
+            public void onResponse(Call<AuthInfo> call, Response<AuthInfo> response) {
+                if(response.isSuccessful()){
+                    AuthInfo info = response.body();
 
-                overlayDialog.dismiss();
+                    user.setId(info.getUser().getId());
+                    user.setName(info.getUser().getName());
+                    user.setEmail(info.getUser().getEmail());
+                    user.setUserType(info.getUser().getUserType());
+                    user.setDailyCalories(info.getUser().getDailyCalories());
+                    user.setAccessToken(info.getAccessToken());
 
-                SignUpFragment fragment = fragmentReference.get();
-                if(fragment != null){
-                    fragment.startActivity(new Intent(fragment.getActivity(), MainActivity.class));
-                    fragment.getActivity().finish();
+                    SignUpFragment fragment = fragmentReference.get();
+                    if(fragment != null){
+                        switch (user.getUserType()){
+                            case UserModel.USER:
+                                fragment.startActivity(new Intent(fragment.getActivity(), MainActivity.class));
+                                fragment.getActivity().finish();
+                                return;
+                            case UserModel.MANGER:
+                            case UserModel.ADMIN:
+                                fragment.startActivity(new Intent(fragment.getActivity(), AdminActivity.class));
+                                fragment.getActivity().finish();
+                                return;
+                            default:
+                                Timber.e("Login error: unknown user type.");
+                        }
+                    }
                 }
+
+                progressBar.setVisibility(View.INVISIBLE);
+                overlayDialog.dismiss();
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<AuthInfo> call, Throwable t) {
                 overlayDialog.dismiss();
                 progressBar.setVisibility(View.INVISIBLE);
                 Timber.e(t, "Error on sign up.");

@@ -22,6 +22,17 @@
             android:text="New Text"
             android:id="@+id/txtName" />
 
+        <Button
+            android:visibility="invisible"
+            android:layout_margin="8dp"
+            android:textColor="#F44336"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:text="@string/fragment_users_impersonate"
+            android:id="@+id/btnImpersonate"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:paddingLeft="16dp"
             android:paddingRight="16dp"

@@ -1,9 +1,14 @@
-package com.hardskygames.luckycalories.models;
+package com.hardskygames.luckycalories.users.models;
 
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 23.04.16.
  */
 public class UserModel {
+
+    public static final int USER = 1;
+    public static final int MANGER = 2;
+    public static final int ADMIN = 3;
+
     private String name;
     private String email;
     private String accessToken;
@@ -61,5 +66,13 @@ public class UserModel {
 
     public void setUserType(int userType) {
         this.userType = userType;
+    }
+
+    public boolean isAdmin() {
+        return userType == ADMIN;
+    }
+
+    public boolean isUser() {
+        return userType == USER;
     }
 }

@@ -11,6 +11,7 @@ import okhttp3.RequestBody;
 import io.swagger.client.model.User;
 import io.swagger.client.model.Error;
 import io.swagger.client.model.Calorie;
+import io.swagger.client.model.AuthInfo;
 import io.swagger.client.model.LoginInfo;
 import io.swagger.client.model.SignUpInfo;
 
@@ -30,7 +31,7 @@ public interface LuckyCaloriesApi {
   
   @POST("users")
   Call<User> createUser(
-          @Body User user
+    @Body User user
   );
 
   
@@ -44,9 +45,10 @@ public interface LuckyCaloriesApi {
   
   @POST("user/{id}/calories")
   Call<Calorie> createUserCalorie(
-          @Path("id") Long id, @Body Calorie calorie
+    @Path("id") Long id, @Body Calorie calorie
   );
 
+  
   /**
    * 
    * Delete user.\n
@@ -56,7 +58,7 @@ public interface LuckyCaloriesApi {
   
   @DELETE("users/{id}")
   Call<Void> deleteUser(
-          @Path("id") Long id
+    @Path("id") Long id
   );
 
   
@@ -70,7 +72,7 @@ public interface LuckyCaloriesApi {
   
   @DELETE("user/{id}/calories/{calorieId}")
   Call<Void> deleteUserCalorie(
-          @Path("id") Long id, @Path("calorieId") Long calorieId
+    @Path("id") Long id, @Path("calorieId") Long calorieId
   );
 
   
@@ -83,7 +85,25 @@ public interface LuckyCaloriesApi {
   
   @GET("users/{id}")
   Call<User> getUser(
-          @Path("id") Long id
+    @Path("id") Long id
+  );
+
+  
+  /**
+   * 
+   * Get paged calories list for user.\nPaged by 100 meals.\nOrdered by eat time (from now to past (closest to current time is first in list)).\nWith applied filter by dates from-to, time from-to \n(e.g. how much calories have I had for lunch each day in the last month, if lunch is between 12 and 15h).\n
+   * @param id user Id (required)
+   * @param last eat time of last meal from previous page (optional)
+   * @param fromDate  (optional)
+   * @param toDate  (optional)
+   * @param fromTime  (optional)
+   * @param toTime  (optional)
+   * @return Call<List<Calorie>>
+   */
+  
+  @GET("user/{id}/calories/filter")
+  Call<List<Calorie>> getUserCaloriesFilter(
+    @Path("id") Long id, @Query("last") Long last, @Query("fromDate") Long fromDate, @Query("toDate") Long toDate, @Query("fromTime") Long fromTime, @Query("toTime") Long toTime
   );
 
   
@@ -97,26 +117,10 @@ public interface LuckyCaloriesApi {
   
   @GET("user/{id}/calories")
   Call<List<Calorie>> getUserCaloriesList(
-          @Path("id") Long id, @Query("last") Long last
+    @Path("id") Long id, @Query("last") Long last
   );
 
-  /**
-   *
-   * Get paged calories list for user.\nPaged by 100 meals.\nOrdered by eat time (from now to past (closest to current time is first in list)).\nWith applied filter by dates from-to, time from-to \n(e.g. how much calories have I had for lunch each day in the last month, if lunch is between 12 and 15h).\n
-   * @param id user Id (required)
-   * @param last eat time of last meal from previous page (optional)
-   * @param fromDate  (optional)
-   * @param toDate  (optional)
-   * @param fromTime  (optional)
-   * @param toTime  (optional)
-   * @return Call<List<Calorie>>
-   */
-
-  @GET("user/{id}/calories/filter")
-  Call<List<Calorie>> getUserCaloriesFilter(
-          @Path("id") Long id, @Query("last") Long last, @Query("fromDate") Long fromDate, @Query("toDate") Long toDate, @Query("fromTime") Long fromTime, @Query("toTime") Long toTime
-  );
-
+  
   /**
    * 
    * Get user list.\nPaged by 100 users.\nOrdered by alphabeticaly.\n
@@ -126,7 +130,7 @@ public interface LuckyCaloriesApi {
   
   @GET("users")
   Call<List<User>> getUserList(
-          @Query("last") String last
+    @Query("last") String last
   );
 
   
@@ -134,12 +138,12 @@ public interface LuckyCaloriesApi {
    * 
    * Authorize user.\n
    * @param info User login info in JSON format. (required)
-   * @return Call<String>
+   * @return Call<AuthInfo>
    */
   
   @POST("login")
-  Call<String> login(
-          @Body LoginInfo info
+  Call<AuthInfo> login(
+    @Body LoginInfo info
   );
 
   
@@ -147,12 +151,12 @@ public interface LuckyCaloriesApi {
    * 
    * Register new user.\n
    * @param info User registration info in JSON format. (required)
-   * @return Call<String>
+   * @return Call<AuthInfo>
    */
   
   @POST("signup")
-  Call<String> signup(
-          @Body SignUpInfo info
+  Call<AuthInfo> signup(
+    @Body SignUpInfo info
   );
 
   
@@ -165,7 +169,7 @@ public interface LuckyCaloriesApi {
   
   @PUT("users")
   Call<User> updateUser(
-          @Body User user
+    @Body User user
   );
 
   
@@ -179,7 +183,7 @@ public interface LuckyCaloriesApi {
   
   @PUT("user/{id}/calories")
   Call<Calorie> updateUserCalorie(
-          @Path("id") Long id, @Body Calorie calorie
+    @Path("id") Long id, @Body Calorie calorie
   );
 
   

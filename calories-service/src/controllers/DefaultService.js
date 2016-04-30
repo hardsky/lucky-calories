@@ -200,7 +200,16 @@ exports.login = function(args, res, next) {
   
   
   var examples = {};
-  examples['application/json'] = "aeiou";
+  examples['application/json'] = {
+  "accessToken" : "aeiou",
+  "user" : {
+    "name" : "aeiou",
+    "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+    "id" : 123456789,
+    "userType" : 123,
+    "email" : "aeiou"
+  }
+};
   
   if(Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');
@@ -221,7 +230,16 @@ exports.signup = function(args, res, next) {
   
   
   var examples = {};
-  examples['application/json'] = "aeiou";
+  examples['application/json'] = {
+  "accessToken" : "aeiou",
+  "user" : {
+    "name" : "aeiou",
+    "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+    "id" : 123456789,
+    "userType" : 123,
+    "email" : "aeiou"
+  }
+};
   
   if(Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');

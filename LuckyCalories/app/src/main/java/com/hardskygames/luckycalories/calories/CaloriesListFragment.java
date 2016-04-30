@@ -17,7 +17,7 @@ import com.hardskygames.luckycalories.calories.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.calories.events.EditCalorieEvent;
 import com.hardskygames.luckycalories.calories.models.CalorieModel;
 import com.hardskygames.luckycalories.calories.models.DailyCalorie;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

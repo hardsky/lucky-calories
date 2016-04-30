@@ -23,7 +23,7 @@ import com.hardskygames.luckycalories.common.TimePickerFragment;
 import com.hardskygames.luckycalories.calories.models.CalorieModel;
 import com.hardskygames.luckycalories.calories.models.DailyCalorie;
 import com.hardskygames.luckycalories.calories.models.FilterModel;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
 

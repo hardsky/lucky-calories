@@ -1,6 +1,7 @@
 package com.hardskygames.luckycalories.users;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,17 +18,15 @@ import android.widget.TextView;
 
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
-import com.hardskygames.luckycalories.calories.EditCalorieFragment;
-import com.hardskygames.luckycalories.calories.models.CalorieModel;
-import com.hardskygames.luckycalories.calories.models.DailyCalorie;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.main.MainActivity;
+import com.hardskygames.luckycalories.users.models.AdminContext;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.hardskygames.luckycalories.users.events.EditUserEvent;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,7 +35,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.swagger.client.api.LuckyCaloriesApi;
-import io.swagger.client.model.Calorie;
 import io.swagger.client.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +50,10 @@ public class UserListFragment extends BaseFragment {
     LuckyCaloriesApi api;
     @Inject
     Bus bus;
+    @Inject
+    UserModel user;
+    @Inject
+    AdminContext adminContext;
 
     @Bind(R.id.listUsers)
     RecyclerView listLayout;
@@ -281,7 +283,9 @@ public class UserListFragment extends BaseFragment {
 
         Button btnEdit;
         Button btnDelete;
-        private UserModel user;
+        Button btnImpersonate;
+
+        private UserModel userModel;
 
         public UserViewHolder(View itemView) {
             super(itemView);
@@ -292,10 +296,12 @@ public class UserListFragment extends BaseFragment {
 
             btnEdit = ButterKnife.findById(itemView, R.id.btnEdit);
             btnDelete = ButterKnife.findById(itemView, R.id.btnDelete);
+
+            btnImpersonate = ButterKnife.findById(itemView, R.id.btnImpersonate);
         }
 
         public void setData(final UserModel data){
-            this.user = data;
+            this.userModel = data;
 
             txtName.setText(data.getName());
             txtEmail.setText(data.getEmail());
@@ -304,15 +310,48 @@ public class UserListFragment extends BaseFragment {
             btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openUserEditDlg(user);
+                    openUserEditDlg(userModel);
                 }
             });
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    usersList.remove(user);
+                    usersList.remove(userModel);
                 }
             });
+
+            if(user.isAdmin() && this.userModel.isUser()){
+                btnImpersonate.setVisibility(View.VISIBLE);
+                btnImpersonate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        UserModel adminCopy = new UserModel();
+
+                        adminCopy.setId(user.getId());
+                        adminCopy.setName(user.getName());
+                        adminCopy.setEmail(user.getEmail());
+                        adminCopy.setUserType(user.getUserType());
+                        adminCopy.setDailyCalories(user.getDailyCalories());
+
+                        //access token is still from admin, that we can identify admin on server
+
+                        adminContext.setAdminModel(adminCopy);
+
+                        user.setId(userModel.getId());
+                        user.setName(userModel.getName());
+                        user.setEmail(userModel.getEmail());
+                        user.setUserType(userModel.getUserType());
+                        user.setDailyCalories(userModel.getDailyCalories());
+
+                        startActivity(new Intent(getActivity(), MainActivity.class));
+                    }
+                });
+            }
+            else{
+                btnImpersonate.setVisibility(View.INVISIBLE);
+                btnImpersonate.setOnClickListener(null);
+            }
         }
     }
 

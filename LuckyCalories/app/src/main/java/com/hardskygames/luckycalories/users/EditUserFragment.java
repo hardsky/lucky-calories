@@ -14,13 +14,9 @@ import android.widget.EditText;
 
 import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
-import com.hardskygames.luckycalories.calories.events.EditCalorieEvent;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.hardskygames.luckycalories.users.events.EditUserEvent;
 import com.squareup.otto.Bus;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 import javax.inject.Inject;
 

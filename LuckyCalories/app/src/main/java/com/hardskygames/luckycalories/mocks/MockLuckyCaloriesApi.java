@@ -6,7 +6,9 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import com.hardskygames.luckycalories.users.models.UserModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -17,11 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 import io.swagger.client.api.LuckyCaloriesApi;
+import io.swagger.client.model.AuthInfo;
 import io.swagger.client.model.Calorie;
 import io.swagger.client.model.LoginInfo;
 import io.swagger.client.model.SignUpInfo;
 import io.swagger.client.model.User;
+import okhttp3.Request;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -77,6 +83,14 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         user.setEmail("test4@test.test");
         user.setDailyCalories(3000f);
         user.setUserType(1);
+        users.put(user.getEmail(), user);
+
+        user = new User();
+        user.setId(5L);
+        user.setName("Test4");
+        user.setEmail("admin@test.test");
+        user.setDailyCalories(3000f);
+        user.setUserType(UserModel.ADMIN);
         users.put(user.getEmail(), user);
 
     }
@@ -228,6 +242,36 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
     }
 
     @Override
+    public Call<AuthInfo> login(@Body LoginInfo info) {
+        if(users.containsKey(info.getEmail())) {
+            AuthInfo res = new AuthInfo();
+            res.setAccessToken("access_token");
+            res.setUser(users.get(info.getEmail()));
+
+            return delegate.returningResponse(res).login(info);
+        }
+        return delegate.returning(null).login(info);
+    }
+
+    @Override
+    public Call<AuthInfo> signup(@Body SignUpInfo info) {
+        User user = new User();
+        user.setEmail(info.getEmail());
+        user.setName(info.getName());
+        user.setDailyCalories(2200f);
+        user.setUserType(1);
+
+        users.put(user.getEmail(), user);
+        user.setId((long)users.size());
+
+        AuthInfo res = new AuthInfo();
+        res.setAccessToken("access_token");
+        res.setUser(user);
+
+        return delegate.returningResponse(res).signup(info);
+    }
+
+    /*@Override
     public Call<String> login(@Body LoginInfo info) {
         return null;
     }
@@ -245,7 +289,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
 
         String res = "access_token";
         return delegate.returningResponse(res).signup(info);
-    }
+    }*/
 
     @Override
     public Call<User> updateUser(@Body User user) {

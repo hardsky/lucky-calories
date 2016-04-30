@@ -39,10 +39,9 @@ paths:
           required: true
       responses:
         200:
-          description: Return access token on success.
+          description: Access token and user info.
           schema:
-            title: AccessToken
-            type: string
+            $ref: "#/definitions/AuthInfo"
         403:
           description: Access denied.
         default:
@@ -64,10 +63,9 @@ paths:
           required: true
       responses:
         200:
-          description: Return access token on success.
+          description: Access token and user info for new user.
           schema:
-            title: AccessToken
-            type: string
+            $ref: "#/definitions/AuthInfo"
         default:
           description: Unexpected error
           schema:
@@ -383,7 +381,7 @@ definitions:
         type: string
       password:
         type: string
-
+  
   Calorie:
     type: object
     properties:
@@ -422,4 +420,15 @@ definitions:
           user, manager, admin  
           User - would only be able to CRUD on his owned records.  
           Manager - same as User + would able to CRUD users  
-          Admin - same as Manager + would able to CRUD everything
+          Admin - same as Manager + would able to CRUD everything;  
+          User == 1;
+          Manager == 2;
+          Admin == 3;
+          
+  AuthInfo:
+    type: object
+    properties:
+      accessToken:
+        type: string
+      user:
+        $ref: "#/definitions/User"

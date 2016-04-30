@@ -3,7 +3,8 @@ package com.hardskygames.luckycalories;
 import android.app.Application;
 
 import com.hardskygames.luckycalories.mocks.MockLuckyCaloriesApi;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.AdminContext;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
@@ -70,5 +71,11 @@ import retrofit2.mock.NetworkBehavior;
     @Singleton
     UserModel userProvider(){
         return new UserModel();
+    }
+
+    @Provides
+    @Singleton
+    AdminContext adminContextProvider(){
+        return new AdminContext();
     }
 }

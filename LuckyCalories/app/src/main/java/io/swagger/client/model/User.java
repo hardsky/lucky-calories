@@ -5,7 +5,7 @@ import com.google.common.base.Objects;
 import io.swagger.annotations.ApiModelProperty;
 
 import com.google.gson.annotations.SerializedName;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.mobandme.android.transformer.compiler.Mappable;
 import com.mobandme.android.transformer.compiler.Mapped;
 

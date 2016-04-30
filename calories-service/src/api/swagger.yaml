@@ -26,10 +26,9 @@ paths:
           $ref: "#/definitions/LoginInfo"
       responses:
         200:
-          description: "Return access token on success."
+          description: "Access token and user info."
           schema:
-            type: "string"
-            title: "AccessToken"
+            $ref: "#/definitions/AuthInfo"
         403:
           description: "Access denied."
         default:
@@ -50,10 +49,9 @@ paths:
           $ref: "#/definitions/SignUpInfo"
       responses:
         200:
-          description: "Return access token on success."
+          description: "Access token and user info for new user."
           schema:
-            type: "string"
-            title: "AccessToken"
+            $ref: "#/definitions/AuthInfo"
         default:
           description: "Unexpected error"
           schema:
@@ -406,4 +404,12 @@ definitions:
         format: "int32"
         description: "user, manager, admin  \nUser - would only be able to CRUD on\
           \ his owned records.  \nManager - same as User + would able to CRUD users\
-          \  \nAdmin - same as Manager + would able to CRUD everything\n"
+          \  \nAdmin - same as Manager + would able to CRUD everything;  \nUser ==\
+          \ 1;\nManager == 2;\nAdmin == 3;\n"
+  AuthInfo:
+    type: "object"
+    properties:
+      accessToken:
+        type: "string"
+      user:
+        $ref: "#/definitions/User"

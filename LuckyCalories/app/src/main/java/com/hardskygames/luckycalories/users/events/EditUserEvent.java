@@ -1,6 +1,6 @@
 package com.hardskygames.luckycalories.users.events;
 
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.UserModel;
 
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 30.04.16.

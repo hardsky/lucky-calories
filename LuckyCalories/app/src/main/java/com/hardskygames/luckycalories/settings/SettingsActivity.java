@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
-import com.hardskygames.luckycalories.models.UserModel;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 
 import java.util.Collections;

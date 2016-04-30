@@ -15,8 +15,8 @@ import com.hardskygames.luckycalories.calories.CaloriesFilterListFragment;
 import com.hardskygames.luckycalories.calories.CaloriesListFragment;
 import com.hardskygames.luckycalories.calories.EditCalorieFragment;
 import com.hardskygames.luckycalories.calories.events.AddCalorieEvent;
-import com.hardskygames.luckycalories.models.UserModel;
-import com.hardskygames.luckycalories.users.UserListFragment;
+import com.hardskygames.luckycalories.users.models.AdminContext;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -45,15 +45,13 @@ public class MainActivity extends BaseActivity {
     UserModel user;
     @Inject
     Bus bus;
+    @Inject
+    AdminContext adminContext;
 
     @Inject
     CaloriesListFragment caloriesListFragment;
     @Inject
     CaloriesFilterListFragment caloriesFilterListFragment;
-    @Inject
-    UserListFragment userListFragment;
-
-    int[] menuTitles;
 
     private Fragment cur = null;
     private Drawer drawler;
@@ -66,13 +64,6 @@ public class MainActivity extends BaseActivity {
 
         toolbar.setTitle(R.string.menu_main_calories);
         setSupportActionBar(toolbar);
-
-        menuTitles = new int[]{
-                R.string.menu_main_calories,
-                R.string.menu_main_filters,
-                R.string.menu_main_users,
-                R.string.menu_main_settings
-        };
 
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -95,16 +86,13 @@ public class MainActivity extends BaseActivity {
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new PrimaryDrawerItem()
-                                .withName(menuTitles[0])
+                                .withName(R.string.menu_main_calories)
                                 .withIcon(R.drawable.ic_assignment_black_24dp),
                         new PrimaryDrawerItem()
-                                .withName(menuTitles[1])
+                                .withName(R.string.menu_main_filters)
                                 .withIcon(R.drawable.ic_filter_list_black_24dp),
                         new PrimaryDrawerItem()
-                                .withName(menuTitles[2])
-                                .withIcon(R.drawable.ic_filter_list_black_24dp),
-                        new PrimaryDrawerItem()
-                                .withName(menuTitles[3])
+                                .withName(R.string.menu_main_settings)
                                 .withIcon(R.drawable.ic_settings_black_24dp)
                                 .withSetSelected(false)
                 )
@@ -113,18 +101,14 @@ public class MainActivity extends BaseActivity {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         switch (position){
                             case 1:
-                                toolbar.setTitle(menuTitles[position - 1]);
+                                toolbar.setTitle(R.string.menu_main_calories);
                                 createCaloriesScreen();
                                 break;
                             case 2:
-                                toolbar.setTitle(menuTitles[position - 1]);
+                                toolbar.setTitle(R.string.menu_main_filters);
                                 createFilterScreen();
                                 break;
                             case 3:
-                                toolbar.setTitle(menuTitles[position - 1]);
-                                createUsersScreen();
-                                break;
-                            case 4:
                                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
                             default:
@@ -133,8 +117,31 @@ public class MainActivity extends BaseActivity {
                         drawler.closeDrawer();
                         return true;
                     }
-                })
-                .build();
+                }).build();
+
+        if(adminContext.getAdminModel() != null){
+            drawler.addItem(new PrimaryDrawerItem()
+                    .withName(R.string.menu_main_main_user)
+                    .withIcon(R.drawable.ic_face_black_24dp)
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            UserModel admin = adminContext.getAdminModel();
+
+                            user.setId(admin.getId());
+                            user.setName(admin.getName());
+                            user.setEmail(admin.getEmail());
+                            user.setUserType(admin.getUserType());
+                            user.setDailyCalories(admin.getDailyCalories());
+
+                            adminContext.setAdminModel(null);
+
+                            finish();
+                            return true;
+                        }
+                    })
+            );
+        }
 
         createCaloriesScreen();
     }
@@ -184,21 +191,6 @@ public class MainActivity extends BaseActivity {
         transaction.commit();
 
         cur = caloriesFilterListFragment;
-    }
-
-    private void createUsersScreen(){
-        if(cur == userListFragment)
-            return;
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if(cur != null){
-            transaction.remove(cur);
-        }
-        transaction.add(R.id.container, userListFragment);
-        transaction.commit();
-
-        cur = userListFragment;
     }
 
     @Subscribe

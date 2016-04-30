@@ -17,6 +17,8 @@
     <string name="menu_main_filters">Filters</string>
     <string name="menu_main_settings">Settings</string>
     <string name="menu_main_users">Users</string>
+    <string name="menu_main_main_user">Main User</string>
+
 
     <string name="save">SAVE</string>
     <string name="fragment_edit_meal">Meal</string>
@@ -35,5 +37,7 @@
     <string name="fragment_users_name">Name</string>
     <string name="fragment_users_email">Email</string>
     <string name="fragment_users_daily">Daily Calories Limit</string>
+
+    <string name="fragment_users_impersonate">Impersonate</string>
 
 </resources>
