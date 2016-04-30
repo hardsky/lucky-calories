@@ -13,30 +13,40 @@
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TextInputLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_below="@id/toolbar"
         android:id="@+id/wrapName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <android.support.design.widget.TextInputEditText
             android:id="@+id/txtName"
+            android:ems="10"
+            android:hint="@string/fragment_users_name"
             android:inputType="textPersonName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_below="@id/wrapName"
         android:id="@+id/wrapEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <android.support.design.widget.TextInputEditText
             android:id="@+id/txtEmail"
+            android:ems="10"
+            android:hint="@string/fragment_users_email"
             android:inputType="textEmailAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_below="@id/wrapEmail"
         android:id="@+id/wrapDailyCalories"
         android:layout_width="wrap_content"
@@ -44,6 +54,8 @@
         <android.support.design.widget.TextInputEditText
             android:id="@+id/txtDailyCalories"
             android:inputType="number"
+            android:ems="10"
+            android:hint="@string/fragment_users_daily"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </android.support.design.widget.TextInputLayout>

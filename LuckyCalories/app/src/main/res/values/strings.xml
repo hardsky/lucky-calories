@@ -32,5 +32,8 @@
 
     <string name="fragment_users_edit">Edit</string>
     <string name="fragment_users_delete">Delete</string>
+    <string name="fragment_users_name">Name</string>
+    <string name="fragment_users_email">Email</string>
+    <string name="fragment_users_daily">Daily Calories Limit</string>
 
 </resources>
