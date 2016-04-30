@@ -1,13 +1,10 @@
 package com.hardskygames.luckycalories;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import com.hardskygames.luckycalories.mocks.MockLuckyCaloriesApi;
-import com.hardskygames.luckycalories.models.User;
+import com.hardskygames.luckycalories.models.UserModel;
 import com.squareup.otto.Bus;
-
-import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Singleton;
 
@@ -71,7 +68,7 @@ import retrofit2.mock.NetworkBehavior;
 
     @Provides
     @Singleton
-    User userProvider(){
-        return new User();
+    UserModel userProvider(){
+        return new UserModel();
     }
 }

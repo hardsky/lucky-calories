@@ -15,7 +15,7 @@ import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.launch.models.SignUp;
 import com.hardskygames.luckycalories.list.CaloriesActivity;
-import com.hardskygames.luckycalories.models.User;
+import com.hardskygames.luckycalories.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 
 import java.lang.ref.WeakReference;
@@ -54,7 +54,7 @@ public class SignUpFragment extends BaseFragment {
     @Inject
     LuckyCaloriesApi api;
     @Inject
-    User user;
+    UserModel user;
 
     private Call<String> signUpCall;
 

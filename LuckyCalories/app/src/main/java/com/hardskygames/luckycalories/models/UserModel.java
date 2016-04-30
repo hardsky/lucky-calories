@@ -3,12 +3,13 @@ package com.hardskygames.luckycalories.models;
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 23.04.16.
  */
-public class User {
+public class UserModel {
     private String name;
     private String email;
     private String accessToken;
     private long id;
     private float dailyCalories = 2200f;
+    private int userType = 1; //user
 
     public String getName() {
         return name;
@@ -52,5 +53,13 @@ public class User {
 
     public void setDailyCalories(float dailyCalories) {
         this.dailyCalories = dailyCalories;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
     }
 }

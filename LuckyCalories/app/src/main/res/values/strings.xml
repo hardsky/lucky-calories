@@ -24,4 +24,9 @@
     <string name="fragment_edit_date">Date</string>
     <string name="fragment_edit_comments">Comments</string>
 
+    <string name="settings">Settings</string>
+    <string name="fragment_settings_daily_calories">Daily Calories</string>
+    <string name="fragment_settings_daily_calories_info">Expected number of calories per day.</string>
+    <string name="fragment_settings_calories">Calories</string>
+
 </resources>

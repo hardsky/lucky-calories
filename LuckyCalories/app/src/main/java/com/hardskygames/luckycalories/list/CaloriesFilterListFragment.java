@@ -23,7 +23,7 @@ import com.hardskygames.luckycalories.common.TimePickerFragment;
 import com.hardskygames.luckycalories.list.models.CalorieModel;
 import com.hardskygames.luckycalories.list.models.DailyCalorie;
 import com.hardskygames.luckycalories.list.models.FilterModel;
-import com.hardskygames.luckycalories.models.User;
+import com.hardskygames.luckycalories.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
 
@@ -59,7 +59,7 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
     @Inject
     LuckyCaloriesApi api;
     @Inject
-    User user;
+    UserModel user;
     @Inject
     Bus bus;
 

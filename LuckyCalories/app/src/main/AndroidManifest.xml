@@ -3,6 +3,7 @@
     package="com.hardskygames.luckycalories">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".LuckyCaloriesApp"
         android:allowBackup="true"
@@ -17,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".list.CaloriesActivity"></activity>
+        <activity android:name=".list.CaloriesActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

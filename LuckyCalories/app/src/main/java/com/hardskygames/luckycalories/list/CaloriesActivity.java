@@ -1,5 +1,6 @@
 package com.hardskygames.luckycalories.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,9 +10,9 @@ import android.view.View;
 
 import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
-import com.hardskygames.luckycalories.launch.events.ShowSignUpScreen;
+import com.hardskygames.luckycalories.SettingsActivity;
 import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
-import com.hardskygames.luckycalories.models.User;
+import com.hardskygames.luckycalories.models.UserModel;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -37,7 +38,7 @@ public class CaloriesActivity extends BaseActivity {
     Toolbar toolbar;
 
     @Inject
-    User user;
+    UserModel user;
     @Inject
     Bus bus;
 
@@ -99,15 +100,17 @@ public class CaloriesActivity extends BaseActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        toolbar.setTitle(menuTitles[position - 1]);
                         switch (position){
                             case 1:
+                                toolbar.setTitle(menuTitles[position - 1]);
                                 createCaloriesScreen();
                                 break;
                             case 2:
+                                toolbar.setTitle(menuTitles[position - 1]);
                                 createFilterScreen();
                                 break;
                             case 3:
+                                startActivity(new Intent(CaloriesActivity.this, SettingsActivity.class));
                                 break;
                             default:
                                 return false;

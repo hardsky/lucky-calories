@@ -5,25 +5,35 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import com.google.gson.annotations.SerializedName;
+import com.hardskygames.luckycalories.list.models.CalorieModel;
+import com.hardskygames.luckycalories.models.UserModel;
+import com.mobandme.android.transformer.compiler.Mappable;
+import com.mobandme.android.transformer.compiler.Mapped;
 
 import java.io.Serializable;
 
 
 
+@Mappable(with = UserModel.class)
 public class User  implements Serializable {
-  
+
+  @Mapped
   @SerializedName("id")
   private Long id = null;
-  
+
+  @Mapped
   @SerializedName("name")
   private String name = null;
-  
+
+  @Mapped
   @SerializedName("email")
   private String email = null;
-  
+
+  @Mapped
   @SerializedName("dailyCalories")
   private Float dailyCalories = null;
-  
+
+  @Mapped
   @SerializedName("userType")
   private Integer userType = null;
   
