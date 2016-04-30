@@ -29,4 +29,7 @@
     <string name="fragment_settings_daily_calories_info">Expected number of calories per day.</string>
     <string name="fragment_settings_calories">Calories</string>
 
+    <string name="fragment_users_edit">Edit</string>
+    <string name="fragment_users_delete">Delete</string>
+
 </resources>
