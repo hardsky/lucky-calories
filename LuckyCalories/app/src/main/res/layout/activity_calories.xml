@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.hardskygames.luckycalories.list.CaloriesActivity">
+    tools:context=".main.MainActivity">
 
     <!-- The ActionBar displayed at the top -->
     <include

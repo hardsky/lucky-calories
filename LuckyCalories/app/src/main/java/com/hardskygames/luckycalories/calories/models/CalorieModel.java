@@ -1,6 +1,6 @@
-package com.hardskygames.luckycalories.list.models;
+package com.hardskygames.luckycalories.calories.models;
 
-import com.hardskygames.luckycalories.list.ICalorieListItem;
+import com.hardskygames.luckycalories.calories.ICalorieListItem;
 
 import java.util.Calendar;
 import java.util.Date;

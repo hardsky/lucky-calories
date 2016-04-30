@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.launch.models.SignUp;
-import com.hardskygames.luckycalories.list.CaloriesActivity;
+import com.hardskygames.luckycalories.main.MainActivity;
 import com.hardskygames.luckycalories.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 
@@ -125,7 +125,7 @@ public class SignUpFragment extends BaseFragment {
 
                 SignUpFragment fragment = fragmentReference.get();
                 if(fragment != null){
-                    fragment.startActivity(new Intent(fragment.getActivity(), CaloriesActivity.class));
+                    fragment.startActivity(new Intent(fragment.getActivity(), MainActivity.class));
                     fragment.getActivity().finish();
                 }
             }

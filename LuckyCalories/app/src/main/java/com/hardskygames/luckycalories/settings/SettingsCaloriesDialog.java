@@ -1,4 +1,4 @@
-package com.hardskygames.luckycalories;
+package com.hardskygames.luckycalories.settings;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.hardskygames.luckycalories.R;
 
 import butterknife.ButterKnife;
 

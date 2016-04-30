@@ -18,8 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".list.CaloriesActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".main.MainActivity" />
+        <activity android:name=".settings.SettingsActivity"></activity>
     </application>
 
 </manifest>

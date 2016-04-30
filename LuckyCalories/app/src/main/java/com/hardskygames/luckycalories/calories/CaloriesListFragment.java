@@ -1,4 +1,4 @@
-package com.hardskygames.luckycalories.list;
+package com.hardskygames.luckycalories.calories;
 
 
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import android.widget.ProgressBar;
 
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
-import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
-import com.hardskygames.luckycalories.list.events.EditCalorieEvent;
-import com.hardskygames.luckycalories.list.models.CalorieModel;
-import com.hardskygames.luckycalories.list.models.DailyCalorie;
+import com.hardskygames.luckycalories.calories.events.AddCalorieEvent;
+import com.hardskygames.luckycalories.calories.events.EditCalorieEvent;
+import com.hardskygames.luckycalories.calories.models.CalorieModel;
+import com.hardskygames.luckycalories.calories.models.DailyCalorie;
 import com.hardskygames.luckycalories.models.UserModel;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

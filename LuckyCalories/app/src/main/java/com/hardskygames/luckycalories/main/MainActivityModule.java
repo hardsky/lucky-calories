@@ -1,6 +1,9 @@
-package com.hardskygames.luckycalories.list;
+package com.hardskygames.luckycalories.main;
 
 import com.hardskygames.luckycalories.BaseActivity;
+import com.hardskygames.luckycalories.calories.CaloriesFilterListFragment;
+import com.hardskygames.luckycalories.calories.CaloriesListFragment;
+import com.hardskygames.luckycalories.calories.EditCalorieFragment;
 
 import dagger.Module;
 
@@ -9,7 +12,7 @@ import dagger.Module;
  */
 @Module(
         injects = {
-                CaloriesActivity.class,
+                MainActivity.class,
                 CaloriesListFragment.class,
                 EditCalorieFragment.class,
                 CaloriesFilterListFragment.class
@@ -17,10 +20,10 @@ import dagger.Module;
         addsTo = com.hardskygames.luckycalories.LuckyCaloriesAppModule.class,
         library = true
 )
-public class CaloriesActivityModule {
+public class MainActivityModule {
     private final BaseActivity activity;
 
-    public CaloriesActivityModule(BaseActivity activity) {
+    public MainActivityModule(BaseActivity activity) {
         this.activity = activity;
     }
 }

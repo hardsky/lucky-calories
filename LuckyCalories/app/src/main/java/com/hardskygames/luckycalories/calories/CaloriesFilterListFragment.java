@@ -1,4 +1,4 @@
-package com.hardskygames.luckycalories.list;
+package com.hardskygames.luckycalories.calories;
 
 
 import android.app.DatePickerDialog;
@@ -20,9 +20,9 @@ import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.common.DatePickerFragment;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
 import com.hardskygames.luckycalories.common.TimePickerFragment;
-import com.hardskygames.luckycalories.list.models.CalorieModel;
-import com.hardskygames.luckycalories.list.models.DailyCalorie;
-import com.hardskygames.luckycalories.list.models.FilterModel;
+import com.hardskygames.luckycalories.calories.models.CalorieModel;
+import com.hardskygames.luckycalories.calories.models.DailyCalorie;
+import com.hardskygames.luckycalories.calories.models.FilterModel;
 import com.hardskygames.luckycalories.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;

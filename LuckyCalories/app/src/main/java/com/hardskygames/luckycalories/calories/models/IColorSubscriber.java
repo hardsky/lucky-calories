@@ -1,4 +1,4 @@
-package com.hardskygames.luckycalories.list.models;
+package com.hardskygames.luckycalories.calories.models;
 
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 28.04.16.

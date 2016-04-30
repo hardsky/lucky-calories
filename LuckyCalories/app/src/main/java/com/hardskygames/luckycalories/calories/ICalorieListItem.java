@@ -1,6 +1,6 @@
-package com.hardskygames.luckycalories.list;
+package com.hardskygames.luckycalories.calories;
 
-import com.hardskygames.luckycalories.list.models.IColorSubscriber;
+import com.hardskygames.luckycalories.calories.models.IColorSubscriber;
 
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 28.04.16.

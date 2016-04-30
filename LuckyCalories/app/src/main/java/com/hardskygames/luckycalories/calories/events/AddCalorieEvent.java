@@ -1,6 +1,6 @@
-package com.hardskygames.luckycalories.list.events;
+package com.hardskygames.luckycalories.calories.events;
 
-import com.hardskygames.luckycalories.list.models.CalorieModel;
+import com.hardskygames.luckycalories.calories.models.CalorieModel;
 
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 26.04.16.

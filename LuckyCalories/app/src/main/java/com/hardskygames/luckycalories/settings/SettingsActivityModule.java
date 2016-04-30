@@ -1,9 +1,7 @@
-package com.hardskygames.luckycalories;
+package com.hardskygames.luckycalories.settings;
 
-import com.hardskygames.luckycalories.list.CaloriesActivity;
-import com.hardskygames.luckycalories.list.CaloriesFilterListFragment;
-import com.hardskygames.luckycalories.list.CaloriesListFragment;
-import com.hardskygames.luckycalories.list.EditCalorieFragment;
+import com.hardskygames.luckycalories.BaseActivity;
+import com.hardskygames.luckycalories.LuckyCaloriesAppModule;
 
 import dagger.Module;
 

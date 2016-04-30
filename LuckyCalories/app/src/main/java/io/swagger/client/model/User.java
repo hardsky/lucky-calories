@@ -1,11 +1,10 @@
 package io.swagger.client.model;
 
 import com.google.common.base.Objects;
-import io.swagger.annotations.ApiModel;
+
 import io.swagger.annotations.ApiModelProperty;
 
 import com.google.gson.annotations.SerializedName;
-import com.hardskygames.luckycalories.list.models.CalorieModel;
 import com.hardskygames.luckycalories.models.UserModel;
 import com.mobandme.android.transformer.compiler.Mappable;
 import com.mobandme.android.transformer.compiler.Mapped;

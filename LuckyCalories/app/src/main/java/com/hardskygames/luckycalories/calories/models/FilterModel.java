@@ -1,4 +1,4 @@
-package com.hardskygames.luckycalories.list.models;
+package com.hardskygames.luckycalories.calories.models;
 
 import java.util.Date;
 

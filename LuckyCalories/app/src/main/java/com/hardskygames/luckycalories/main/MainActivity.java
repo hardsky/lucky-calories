@@ -1,4 +1,4 @@
-package com.hardskygames.luckycalories.list;
+package com.hardskygames.luckycalories.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,11 @@ import android.view.View;
 
 import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
-import com.hardskygames.luckycalories.SettingsActivity;
-import com.hardskygames.luckycalories.list.events.AddCalorieEvent;
+import com.hardskygames.luckycalories.settings.SettingsActivity;
+import com.hardskygames.luckycalories.calories.CaloriesFilterListFragment;
+import com.hardskygames.luckycalories.calories.CaloriesListFragment;
+import com.hardskygames.luckycalories.calories.EditCalorieFragment;
+import com.hardskygames.luckycalories.calories.events.AddCalorieEvent;
 import com.hardskygames.luckycalories.models.UserModel;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -32,7 +35,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CaloriesActivity extends BaseActivity {
+public class MainActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -110,7 +113,7 @@ public class CaloriesActivity extends BaseActivity {
                                 createFilterScreen();
                                 break;
                             case 3:
-                                startActivity(new Intent(CaloriesActivity.this, SettingsActivity.class));
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                                 break;
                             default:
                                 return false;
@@ -126,7 +129,7 @@ public class CaloriesActivity extends BaseActivity {
 
     @Override
     protected List<Object> getModules() {
-        return Collections.<Object>singletonList(new CaloriesActivityModule(this));
+        return Collections.<Object>singletonList(new MainActivityModule(this));
     }
 
     @Override

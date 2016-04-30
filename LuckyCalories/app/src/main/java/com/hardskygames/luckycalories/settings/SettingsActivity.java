@@ -1,10 +1,12 @@
-package com.hardskygames.luckycalories;
+package com.hardskygames.luckycalories.settings;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.hardskygames.luckycalories.BaseActivity;
+import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 

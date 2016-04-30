@@ -5,7 +5,7 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.hardskygames.luckycalories.list.CaloriesActivity;
+import com.hardskygames.luckycalories.main.MainActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.not;
 public class CaloriesTest {
 
     @Rule
-    public ActivityTestRule<CaloriesActivity> mActivityRule = new ActivityTestRule<>(CaloriesActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
     public void afterSwipeRemoveItem(){

@@ -1,4 +1,4 @@
-package com.hardskygames.luckycalories.list;
+package com.hardskygames.luckycalories.calories;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultimap;
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
-import com.hardskygames.luckycalories.list.models.CalorieModel;
-import com.hardskygames.luckycalories.list.models.DailyCalorie;
-import com.hardskygames.luckycalories.list.models.IColorSubscriber;
-import com.hardskygames.luckycalories.list.models.OrderingCalorie;
+import com.hardskygames.luckycalories.calories.models.CalorieModel;
+import com.hardskygames.luckycalories.calories.models.DailyCalorie;
+import com.hardskygames.luckycalories.calories.models.IColorSubscriber;
+import com.hardskygames.luckycalories.calories.models.OrderingCalorie;
 import com.mobandme.android.transformer.Transformer;
 
 import java.text.DateFormat;
