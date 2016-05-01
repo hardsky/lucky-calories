@@ -101,7 +101,7 @@ exports.deleteUser = function(args, res, next) {
   **/
   // no response value expected for this operation
 
-    var userId = args.id;
+    var userId = args.id.value;
     db.none("update users set deleted=TRUE where user_id=$1", userId)
         .then(function () {
             // success;
@@ -138,7 +138,7 @@ exports.getUser = function(args, res, next) {
   **/
 
     db.one("select user_id, user_name, email, user_type, daily_calories from users where user_id=$1 and not deleted",
-           args.id)
+           args.id.value)
         .then(function (data) {
             // success;
             res.setHeader('Content-Type', 'application/json');
@@ -186,12 +186,13 @@ exports.getUserCaloriesFilter = function(args, res, next) {
   * fromTime (Long)
   * toTime (Long)
   **/
+    var last = args.last.value | 0;
     db.any("select calorie_id, meal, note, calorie_num, eat_time from calories where user_id=$1 and not deleted" +
            " and eat_time >= $2 and eat_time <=$3" +
            " and date_part('hour', eat_time) >= date_part('hour', $4) and date_part('minute', eat_time) >= date_part('minute', $4)" +
            " and date_part('hour', eat_time) <= date_part('hour', $5) and date_part('minute', eat_time) <= date_part('minute', $5)" +
            " and ($6 = 0 or eat_time < to_timestamp($6)) order by eat_time desc limit ($7)",
-           [args.id, new Date(args.fromDate), new Date(args.toDate), new Date(args.fromTime), new Date(args.toTime), args.last, pageSize])
+           [args.id.value, new Date(args.fromDate.value), new Date(args.toDate.value), new Date(args.fromTime.value), new Date(args.toTime.value), last, pageSize])
         .then(function (data) {
             // success;
             res.setHeader('Content-Type', 'application/json');
@@ -284,9 +285,11 @@ exports.getUserList = function(args, res, next) {
   * last (String)
   **/
 
+    var last = args.last.value ? args.last.value : '';
+
     db.any("select user_id, user_name, email, user_type, daily_calories from users where not deleted" +
            " and ($1 is null or user_name > $1) order by user_name desc limit ($2)",
-           [args.last, pageSize])
+           [last, pageSize])
         .then(function (data) {
             // success;
             res.setHeader('Content-Type', 'application/json');
@@ -448,15 +451,8 @@ exports.updateUser = function(args, res, next) {
   * user (User)
   **/
 
-    /*var user = {
-        id: args.body.id,
-        name: args.body.name,
-        email: args.body.email,
-        dailyCalories: args.body.dailyCalories,
-        userType: args.body.userType
-     };*/
-    var user = _.assign({}, args.user);
-    db.none("update users set user_name=$2, daily_calories=$3  where user_id=$1", user.id)
+    var user = _.assign({}, args.user.value);
+    db.none("update users set user_name=${name}, daily_calories=${dailyCalories}  where user_id=${id}", user)
         .then(function () {
             // success;
             res.setHeader('Content-Type', 'application/json');
