@@ -336,26 +336,30 @@ exports.login = function(args, res, next) {
   **/
 
     db.one("select user_id, user_name, email, user_type, daily_calories, psw_hash from users where email=$1 and not deleted",
-           args.info.email)
+           args.info.value.email)
         .then(function (data) {
             // success;
-            if(data.pws_hash == createHash(args.info.password)){
+            var psw_hash = createHash(args.info.value.password);
+            if(data.psw_hash == psw_hash){
+
+                var user = {
+                    id: data.user_id,
+                    name: data.user_name,
+                    email: data.email,
+                    dailyCalories: data.daily_calories,
+                    userType: data.user_type
+                };
 
                 res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(function(el){
-                    return {
-                        acces_token: jwt.sign({ userId: el.user_id }, privateJwtKey, {expiresIn: '360d'}),
-                        user: function(el){
-                            return {
-                                id: el.user_id,
-                                name: el.user_name,
-                                email: el.email,
-                                dailyCalories: el.daily_calories,
-                                userType: el.user_type
-                            };
-                        }(el)
-                    };
-                }(data)), null, 2);
+                res.end(JSON.stringify({
+                    acces_token: jwt.sign({ userId: user.id }, privateJwtKey, {expiresIn: '360d'}),
+                    user: user
+                }), null, 2);
+            }
+            else{
+                console.log("ERROR: wrong psw."); // print error;
+                console.log(data.psw_hash); // print error;
+                console.log(psw_hash); // print error;
             }
         })
         .catch(function (error) {
