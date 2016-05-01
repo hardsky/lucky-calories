@@ -496,8 +496,8 @@ exports.updateUserCalorie = function(args, res, next) {
   * calorie (Calorie)
   **/
 
-    var userId = args.id;
-    var calorie = _.assign({}, args.calorie);
+    var userId = args.id.value;
+    var calorie = _.assign({}, args.calorie.value);
     db.none("update calories set meal=$2, note=$3, calorie_num=$4, eat_time=$5 where calorie_id=$1",
             [calorie.id, calorie.meal, calorie.note, calorie.amount, new Date(calorie.eatTime)])
         .then(function () {
@@ -510,7 +510,7 @@ exports.updateUserCalorie = function(args, res, next) {
         });
 
 
-  var examples = {};
+/*  var examples = {};
   examples['application/json'] = {
   "meal" : "aeiou",
   "eatTime" : 123456789,
@@ -526,6 +526,6 @@ exports.updateUserCalorie = function(args, res, next) {
   else {
     res.end();
   }
-
+*/
 
 };
