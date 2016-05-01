@@ -97,7 +97,7 @@ public class EditCalorieFragment extends DialogFragment implements Toolbar.OnMen
         if(model.getId() > 0) { //existed value; edit mode
 
             txtMeal.setText(model.getMeal());
-            txtKCal.setText(String.format(Locale.US, "%.2f", model.getAmount()));
+            txtKCal.setText(String.format(Locale.US, "%d", model.getAmount()));
             txtDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(model.getEatTime()));
             txtTime.setText(new SimpleDateFormat("HH:mm").format(model.getEatTime()));
             txtNote.setText(model.getNote());
@@ -165,7 +165,7 @@ public class EditCalorieFragment extends DialogFragment implements Toolbar.OnMen
     public boolean onMenuItemClick(MenuItem item) {
         try{
             model.setMeal(txtMeal.getText().toString());
-            model.setAmount(Float.parseFloat(txtKCal.getText().toString()));
+            model.setAmount(Integer.parseInt(txtKCal.getText().toString()));
             model.setEatTime(calendar.getTime());
             model.setNote(txtNote.getText().toString());
 

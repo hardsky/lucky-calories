@@ -243,7 +243,7 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
                 }
                 else{ //add item
                     DailyCalorie dailyCalorie = dailies.get(calorieModel.getEatDate());
-                    float prevTotal = dailyCalorie.getTotal();
+                    int prevTotal = dailyCalorie.getTotal();
                     dailies.get(calorieModel.getEatDate()).add(calorieModel);
                     calories.put(calorieModel.getEatDate(), calorieModel);
                     adapter.notifyItemChanged(getSubHeaderPosition(calorieModel.getEatDate()));

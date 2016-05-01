@@ -109,7 +109,7 @@ public class EditUserFragment extends DialogFragment implements Toolbar.OnMenuIt
 
             model.setName(txtName.getText().toString());
             model.setEmail(txtEmail.getText().toString());
-            model.setDailyCalories(Float.parseFloat(txtDailyCalories.getText().toString()));
+            model.setDailyCalories(Integer.parseInt(txtDailyCalories.getText().toString()));
 
             EditUserEvent ev = new EditUserEvent();
             ev.model = model;

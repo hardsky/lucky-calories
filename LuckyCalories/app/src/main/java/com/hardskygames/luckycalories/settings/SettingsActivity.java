@@ -12,6 +12,7 @@ import com.mobandme.android.transformer.Transformer;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -54,12 +55,12 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 SettingsCaloriesDialog dialog = new SettingsCaloriesDialog();
-                dialog.setCalories(String.format("%.2f", user.getDailyCalories()));
+                dialog.setCalories(String.format(Locale.US, "%d", user.getDailyCalories()));
                 dialog.setListener(new SettingsCaloriesDialog.OnSaveListener() {
                     @Override
                     public void onSave(String calorie) {
                         try {
-                            user.setDailyCalories(Float.parseFloat(calorie));
+                            user.setDailyCalories(Integer.parseInt(calorie));
                             api.updateUser(userTransformer.transform(user, User.class))
                                     .enqueue(new Callback<User>() {
                                         @Override

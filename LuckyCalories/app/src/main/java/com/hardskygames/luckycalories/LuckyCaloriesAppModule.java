@@ -11,6 +11,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.swagger.client.ApiClient;
+import io.swagger.client.LuckyCaloriesApiClient;
 import io.swagger.client.api.LuckyCaloriesApi;
 import retrofit2.Retrofit;
 import retrofit2.mock.BehaviorDelegate;
@@ -45,9 +47,9 @@ import retrofit2.mock.NetworkBehavior;
     }
 
     @Provides
-    @Singleton
-    LuckyCaloriesApi provideApi() {
-        //if(mApplication.isTestMode()) {
+    //@Singleton
+    LuckyCaloriesApi provideApi(UserModel user) {
+        /*if(mApplication.isTestMode()) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://localhost:4003/api/v1/")
                     .build();
@@ -61,10 +63,14 @@ import retrofit2.mock.NetworkBehavior;
 
             BehaviorDelegate<LuckyCaloriesApi> delegate = mockRetrofit.create(LuckyCaloriesApi.class);
             return new MockLuckyCaloriesApi(delegate);
-        /*}
+        }
         else {
             throw new UnsupportedOperationException("Forgotten service for production.");
         }*/
+
+        //return new ApiClient("access_token", user.getAccessToken()).createService(LuckyCaloriesApi.class);
+
+        return LuckyCaloriesApiClient.createClient(user.getAccessToken());
     }
 
     @Provides

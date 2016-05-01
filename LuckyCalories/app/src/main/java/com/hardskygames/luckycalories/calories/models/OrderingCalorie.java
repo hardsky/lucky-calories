@@ -1,6 +1,7 @@
 package com.hardskygames.luckycalories.calories.models;
 
 import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
 
 /**
  * Created by Nikolay Mihailov <hardsky@yandex.ru>  on 29.04.16.
@@ -19,6 +20,6 @@ public class OrderingCalorie extends Ordering<CalorieModel> {
         if(res != 0)
             return res;
 
-        return Float.compare(left.getAmount(), right.getAmount());
+        return Ints.compare(left.getAmount(), right.getAmount());
     }
 }

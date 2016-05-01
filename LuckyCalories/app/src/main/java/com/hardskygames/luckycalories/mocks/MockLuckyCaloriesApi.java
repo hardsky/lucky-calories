@@ -57,7 +57,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         user.setId(1L);
         user.setName("Test1");
         user.setEmail("test1@test.test");
-        user.setDailyCalories(2200f);
+        user.setDailyCalories(2200);
         user.setUserType(1);
         users.put(user.getEmail(), user);
 
@@ -65,7 +65,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         user.setId(2L);
         user.setName("Test2");
         user.setEmail("test2@test.test");
-        user.setDailyCalories(2500f);
+        user.setDailyCalories(2500);
         user.setUserType(1);
         users.put(user.getEmail(), user);
 
@@ -73,7 +73,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         user.setId(3L);
         user.setName("Test3");
         user.setEmail("test3@test.test");
-        user.setDailyCalories(2800f);
+        user.setDailyCalories(2800);
         user.setUserType(1);
         users.put(user.getEmail(), user);
 
@@ -81,7 +81,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         user.setId(4L);
         user.setName("Test4");
         user.setEmail("test4@test.test");
-        user.setDailyCalories(3000f);
+        user.setDailyCalories(3000);
         user.setUserType(1);
         users.put(user.getEmail(), user);
 
@@ -89,7 +89,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         user.setId(5L);
         user.setName("Test4");
         user.setEmail("admin@test.test");
-        user.setDailyCalories(3000f);
+        user.setDailyCalories(3000);
         user.setUserType(UserModel.ADMIN);
         users.put(user.getEmail(), user);
 
@@ -102,7 +102,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calendar.set(Calendar.HOUR_OF_DAY, 22);
         Calorie calorie = new Calorie();
         calorie.setMeal("Meat");
-        calorie.setAmount(400f);
+        calorie.setAmount(400);
         calorie.setEatTime(calendar.getTimeInMillis());
         calorie.setNote("Test1 Test");
         calorie.setId(1L);
@@ -111,7 +111,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Milk");
-        calorie.setAmount(200f);
+        calorie.setAmount(200);
         calorie.setEatTime(calendar.getTimeInMillis());
         calorie.setNote("Test2 Test");
         calorie.setId(2L);
@@ -120,7 +120,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Eggs");
-        calorie.setAmount(300f);
+        calorie.setAmount(300);
         calorie.setEatTime(calendar.getTimeInMillis());
         calorie.setNote("Test3 Test");
         calorie.setId(3L);
@@ -129,7 +129,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Bred with butter");
-        calorie.setAmount(100f);
+        calorie.setAmount(100);
         calorie.setEatTime(calendar.getTimeInMillis());
         calorie.setNote("Test4 Test");
         calorie.setId(4L);
@@ -138,7 +138,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         calendar.add(Calendar.HOUR_OF_DAY, -2);
         calorie = new Calorie();
         calorie.setMeal("Beer");
-        calorie.setAmount(200f);
+        calorie.setAmount(200);
         calorie.setEatTime(calendar.getTimeInMillis());
         calorie.setNote("Test5 Test");
         calorie.setId(5L);
@@ -258,7 +258,7 @@ public class MockLuckyCaloriesApi implements LuckyCaloriesApi {
         User user = new User();
         user.setEmail(info.getEmail());
         user.setName(info.getName());
-        user.setDailyCalories(2200f);
+        user.setDailyCalories(2200);
         user.setUserType(1);
 
         users.put(user.getEmail(), user);

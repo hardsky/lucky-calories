@@ -12,16 +12,16 @@ import java.util.List;
  */
 public class DailyCalorie implements ICalorieListItem {
 
-    private final float dailyNorm;
+    private final int dailyNorm;
     private Date date;
-    private float total;
+    private int total;
     private List<IColorSubscriber> listeners = new ArrayList<>(10);
 
     private int currentColor = IColorSubscriber.NORMAl_COLOR;
     private List<CalorieModel> calories = new ArrayList<>(10);
 
 
-    public DailyCalorie(float dailyNorm){
+    public DailyCalorie(int dailyNorm){
         this.dailyNorm = dailyNorm;
     }
 
@@ -33,7 +33,7 @@ public class DailyCalorie implements ICalorieListItem {
         this.date = date;
     }
 
-    public float getTotal() {
+    public int getTotal() {
         return total;
     }
 
@@ -105,7 +105,7 @@ public class DailyCalorie implements ICalorieListItem {
     }
 
     public void change(){
-        total = 0f;
+        total = 0;
         for(CalorieModel calorie: calories){
             total += calorie.getAmount();
         }

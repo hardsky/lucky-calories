@@ -13,7 +13,7 @@ public class UserModel {
     private String email;
     private String accessToken;
     private long id;
-    private float dailyCalories = 2200f;
+    private int dailyCalories = 2200;
     private int userType = 1; //user
 
     public String getName() {
@@ -52,11 +52,11 @@ public class UserModel {
         this.id = id;
     }
 
-    public float getDailyCalories() {
+    public int getDailyCalories() {
         return dailyCalories;
     }
 
-    public void setDailyCalories(float dailyCalories) {
+    public void setDailyCalories(int dailyCalories) {
         this.dailyCalories = dailyCalories;
     }
 

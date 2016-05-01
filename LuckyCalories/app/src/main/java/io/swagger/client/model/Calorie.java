@@ -1,30 +1,43 @@
 package io.swagger.client.model;
 
 import com.google.common.base.Objects;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import com.google.gson.annotations.SerializedName;
+import com.hardskygames.luckycalories.calories.models.CalorieModel;
+import com.hardskygames.luckycalories.mapper.DateToLongParser;
+import com.hardskygames.luckycalories.mapper.LongToDateParser;
+import com.mobandme.android.transformer.compiler.Mappable;
+import com.mobandme.android.transformer.compiler.Mapped;
+import com.mobandme.android.transformer.compiler.Parse;
 
 import java.io.Serializable;
 
+import io.swagger.annotations.ApiModelProperty;
 
 
+@Mappable(with = CalorieModel.class)
 public class Calorie  implements Serializable {
-  
+
+  @Mapped
   @SerializedName("id")
   private Long id = null;
-  
+
+  @Mapped
   @SerializedName("meal")
   private String meal = null;
-  
+
+  @Mapped
   @SerializedName("note")
   private String note = null;
-  
+
+  @Mapped
   @SerializedName("amount")
   private Integer amount = null;
-  
-  @SerializedName("eatTime")
+
+  @Mapped
+  @Parse(
+          originToDestinationWith = LongToDateParser.class,
+          destinationToOriginWith = DateToLongParser.class
+  )  @SerializedName("eatTime")
   private Long eatTime = null;
   
 

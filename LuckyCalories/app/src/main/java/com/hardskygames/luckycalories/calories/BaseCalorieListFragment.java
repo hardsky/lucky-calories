@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.NavigableSet;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -50,7 +51,7 @@ public class BaseCalorieListFragment extends BaseFragment {
             .Builder()
             .build(io.swagger.client.model.Calorie.class);
 
-    protected float calorieAlertLevel;
+    protected int calorieAlertLevel;
 
 
     public BaseCalorieListFragment() {
@@ -260,7 +261,7 @@ public class BaseCalorieListFragment extends BaseFragment {
             this.daily = data;
 
             txtDate.setText(timeFormat.format(data.getDate()));
-            txtTotal.setText(String.format("%.0f kcal", data.getTotal()));
+            txtTotal.setText(String.format(Locale.US, "%d kcal", data.getTotal()));
 
             data.register(this);
         }
@@ -303,7 +304,7 @@ public class BaseCalorieListFragment extends BaseFragment {
             this.calorie = data;
 
             txtMeal.setText(calorie.getMeal());
-            txtKCal.setText(String.format("%.0f", calorie.getAmount()));
+            txtKCal.setText(String.format(Locale.US, "%d", calorie.getAmount()));
             txtTime.setText(timeFormat.format(calorie.getEatTime()));
             txtComment.setText(calorie.getNote());
 

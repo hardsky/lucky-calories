@@ -15,7 +15,7 @@ public class CalorieModel implements ICalorieListItem, IColorSubscriber {
 
     private String note = null;
 
-    private float amount =0f;
+    private int amount =0;
 
     private Date eatTime = null;
     private DailyCalorie daily;
@@ -47,11 +47,11 @@ public class CalorieModel implements ICalorieListItem, IColorSubscriber {
         this.note = note;
     }
 
-    public float getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
 
         if(daily != null){
