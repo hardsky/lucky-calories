@@ -189,11 +189,10 @@ exports.getUserCaloriesFilter = function(args, res, next) {
   **/
     var last = args.last.value | 0;
     db.any("select calorie_id, meal, note, calorie_num, eat_time from calories where user_id=$1 and not deleted" +
-           " and eat_time >= $2 and eat_time <=$3" +
-           " and date_part('hour', eat_time) >= date_part('hour', $4) and date_part('minute', eat_time) >= date_part('minute', $4)" +
-           " and date_part('hour', eat_time) <= date_part('hour', $5) and date_part('minute', eat_time) <= date_part('minute', $5)" +
+           " and eat_time >= to_timestamp($2) and eat_time <=to_timestamp($3)" +
+           " and CAST(eat_time AS TIME WITH TIME ZONE) between CAST(to_timestamp($4) AS TIME WITH TIME ZONE) and CAST(to_timestamp($5) AS TIME WITH TIME ZONE)" +
            " and ($6 = 0 or eat_time < to_timestamp($6)) order by eat_time desc limit ($7)",
-           [args.id.value, new Date(args.fromDate.value), new Date(args.toDate.value), new Date(args.fromTime.value), new Date(args.toTime.value), last, pageSize])
+           [args.id.value, args.fromDate.value, args.toDate.value, args.fromTime.value, args.toTime.value, last, pageSize])
         .then(function (data) {
             // success;
             res.setHeader('Content-Type', 'application/json');
