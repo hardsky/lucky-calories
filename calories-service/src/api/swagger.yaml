@@ -380,8 +380,8 @@ definitions:
       note:
         type: "string"
       amount:
-        type: "number"
-        format: "float"
+        type: "integer"
+        format: "int32"
         description: "Value in kcal"
       eatTime:
         type: "integer"
@@ -397,8 +397,9 @@ definitions:
       email:
         type: "string"
       dailyCalories:
-        type: "number"
-        format: "float"
+        type: "integer"
+        format: "int32"
+        description: "Daily calories limit"
       userType:
         type: "integer"
         format: "int32"

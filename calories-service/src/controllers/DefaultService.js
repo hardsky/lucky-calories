@@ -10,7 +10,7 @@ exports.createUser = function(args, res, next) {
   var examples = {};
   examples['application/json'] = {
   "name" : "aeiou",
-  "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+  "dailyCalories" : 123,
   "id" : 123456789,
   "userType" : 123,
   "email" : "aeiou"
@@ -40,7 +40,7 @@ exports.createUserCalorie = function(args, res, next) {
   "meal" : "aeiou",
   "eatTime" : 123456789,
   "note" : "aeiou",
-  "amount" : 1.3579000000000001069366817318950779736042022705078125,
+  "amount" : 123,
   "id" : 123456789
 };
   
@@ -88,7 +88,7 @@ exports.getUser = function(args, res, next) {
   var examples = {};
   examples['application/json'] = {
   "name" : "aeiou",
-  "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+  "dailyCalories" : 123,
   "id" : 123456789,
   "userType" : 123,
   "email" : "aeiou"
@@ -122,7 +122,7 @@ exports.getUserCaloriesFilter = function(args, res, next) {
   "meal" : "aeiou",
   "eatTime" : 123456789,
   "note" : "aeiou",
-  "amount" : 1.3579000000000001069366817318950779736042022705078125,
+  "amount" : 123,
   "id" : 123456789
 } ];
   
@@ -150,7 +150,7 @@ exports.getUserCaloriesList = function(args, res, next) {
   "meal" : "aeiou",
   "eatTime" : 123456789,
   "note" : "aeiou",
-  "amount" : 1.3579000000000001069366817318950779736042022705078125,
+  "amount" : 123,
   "id" : 123456789
 } ];
   
@@ -175,7 +175,7 @@ exports.getUserList = function(args, res, next) {
   var examples = {};
   examples['application/json'] = [ {
   "name" : "aeiou",
-  "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+  "dailyCalories" : 123,
   "id" : 123456789,
   "userType" : 123,
   "email" : "aeiou"
@@ -204,7 +204,7 @@ exports.login = function(args, res, next) {
   "accessToken" : "aeiou",
   "user" : {
     "name" : "aeiou",
-    "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+    "dailyCalories" : 123,
     "id" : 123456789,
     "userType" : 123,
     "email" : "aeiou"
@@ -234,7 +234,7 @@ exports.signup = function(args, res, next) {
   "accessToken" : "aeiou",
   "user" : {
     "name" : "aeiou",
-    "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+    "dailyCalories" : 123,
     "id" : 123456789,
     "userType" : 123,
     "email" : "aeiou"
@@ -262,7 +262,7 @@ exports.updateUser = function(args, res, next) {
   var examples = {};
   examples['application/json'] = {
   "name" : "aeiou",
-  "dailyCalories" : 1.3579000000000001069366817318950779736042022705078125,
+  "dailyCalories" : 123,
   "id" : 123456789,
   "userType" : 123,
   "email" : "aeiou"
@@ -292,7 +292,7 @@ exports.updateUserCalorie = function(args, res, next) {
   "meal" : "aeiou",
   "eatTime" : 123456789,
   "note" : "aeiou",
-  "amount" : 1.3579000000000001069366817318950779736042022705078125,
+  "amount" : 123,
   "id" : 123456789
 };
   

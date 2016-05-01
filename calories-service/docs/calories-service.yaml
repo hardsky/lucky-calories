@@ -394,8 +394,8 @@ definitions:
         type: string
       amount:
         description: Value in kcal 
-        type: number
-        format: float
+        type: integer
+        format: int32
       eatTime:
         type: integer
         format: int64
@@ -411,8 +411,9 @@ definitions:
       email:
         type: string
       dailyCalories:
-        type: number
-        format: float
+        description: Daily calories limit
+        type: integer
+        format: int32
       userType:
         type: integer
         format: int32

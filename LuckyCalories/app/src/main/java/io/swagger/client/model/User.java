@@ -1,38 +1,29 @@
 package io.swagger.client.model;
 
 import com.google.common.base.Objects;
-
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import com.google.gson.annotations.SerializedName;
-import com.hardskygames.luckycalories.users.models.UserModel;
-import com.mobandme.android.transformer.compiler.Mappable;
-import com.mobandme.android.transformer.compiler.Mapped;
 
 import java.io.Serializable;
 
 
 
-@Mappable(with = UserModel.class)
 public class User  implements Serializable {
-
-  @Mapped
+  
   @SerializedName("id")
   private Long id = null;
-
-  @Mapped
+  
   @SerializedName("name")
   private String name = null;
-
-  @Mapped
+  
   @SerializedName("email")
   private String email = null;
-
-  @Mapped
+  
   @SerializedName("dailyCalories")
-  private Float dailyCalories = null;
-
-  @Mapped
+  private Integer dailyCalories = null;
+  
   @SerializedName("userType")
   private Integer userType = null;
   
@@ -72,20 +63,21 @@ public class User  implements Serializable {
 
   
   /**
+   * Daily calories limit
    **/
-  @ApiModelProperty(value = "")
-  public Float getDailyCalories() {
+  @ApiModelProperty(value = "Daily calories limit")
+  public Integer getDailyCalories() {
     return dailyCalories;
   }
-  public void setDailyCalories(Float dailyCalories) {
+  public void setDailyCalories(Integer dailyCalories) {
     this.dailyCalories = dailyCalories;
   }
 
   
   /**
-   * user, manager, admin  \nUser - would only be able to CRUD on his owned records.  \nManager - same as User + would able to CRUD users  \nAdmin - same as Manager + would able to CRUD everything\n
+   * user, manager, admin  \nUser - would only be able to CRUD on his owned records.  \nManager - same as User + would able to CRUD users  \nAdmin - same as Manager + would able to CRUD everything;  \nUser == 1;\nManager == 2;\nAdmin == 3;\n
    **/
-  @ApiModelProperty(value = "user, manager, admin  \nUser - would only be able to CRUD on his owned records.  \nManager - same as User + would able to CRUD users  \nAdmin - same as Manager + would able to CRUD everything\n")
+  @ApiModelProperty(value = "user, manager, admin  \nUser - would only be able to CRUD on his owned records.  \nManager - same as User + would able to CRUD users  \nAdmin - same as Manager + would able to CRUD everything;  \nUser == 1;\nManager == 2;\nAdmin == 3;\n")
   public Integer getUserType() {
     return userType;
   }
