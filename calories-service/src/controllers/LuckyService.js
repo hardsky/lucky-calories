@@ -238,9 +238,11 @@ exports.getUserCaloriesList = function(args, res, next) {
   * last (Long)
   **/
 
+    var last = args.last.value | 0;
+
     db.any("select calorie_id, meal, note, calorie_num, eat_time from calories where user_id=$1 and not deleted" +
            " and ($2 = 0 or eat_time < to_timestamp($2)) order by eat_time desc limit ($3)",
-           [args.id, args.last, pageSize])
+           [args.id.value, last, pageSize])
         .then(function (data) {
             // success;
             res.setHeader('Content-Type', 'application/json');
