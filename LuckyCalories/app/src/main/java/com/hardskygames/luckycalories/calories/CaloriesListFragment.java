@@ -80,6 +80,22 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
                     CalorieModel model = ((MealItemViewHolder)viewHolder).getData();
                     Date eatDate = model.getEatDate();
 
+                    if(model.getId() > 0) {
+                        api.deleteUserCalorie(user.getId(), model.getId()).enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if(!response.isSuccessful()){
+                                    Timber.e("Error on delete calorie entry: %s", response.errorBody());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                Timber.e(t, "Error on delete calorie entry.");
+                            }
+                        });
+                    }
+
                     int position = viewHolder.getAdapterPosition();
                     if(calories.get(eatDate).isEmpty()){//remove item + day sub-header
 
