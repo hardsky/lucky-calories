@@ -56,11 +56,11 @@ exports.createUserCalorie = function(args, res, next) {
   * calorie (Calorie)
   **/
 
-    var userId = args.id;
-    var cl = _.assignIn({}, args.calorie);
+    var userId = args.id.value;
+    var cl = _.assignIn({}, args.calorie.value);
 
     db.one("insert into calories(user_id, meal, note, calorie_num, eat_time) values($1, $2, $3, $4, $5) returning calorie_id",
-           userId, cl.meal, cl.note, cl.amount, new Date(cl.eatTime))
+           [userId, cl.meal, cl.note, cl.amount, new Date(cl.eatTime)])
         .then(function (data) {
 
             cl.id = data.calorie_id;
