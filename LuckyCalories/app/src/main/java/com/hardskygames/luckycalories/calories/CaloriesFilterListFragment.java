@@ -174,6 +174,13 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
 
         lastDate = 0;
 
+        int removed = calories.size();
+        dailies.clear();
+        calories.clear();
+
+        //adapter.notifyItemRangeRemoved(0, removed);
+        adapter.notifyDataSetChanged();
+
         loadPage();
     }
 
