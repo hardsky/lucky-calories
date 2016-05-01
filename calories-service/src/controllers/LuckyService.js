@@ -102,15 +102,14 @@ exports.deleteUser = function(args, res, next) {
   // no response value expected for this operation
 
     var userId = args.id;
-    db.none("update users set delete=TRUE where user_id=$1", userId)
+    db.none("update users set deleted=TRUE where user_id=$1", userId)
         .then(function () {
             // success;
+            res.end();
         })
         .catch(function (error) {
             console.log("ERROR:", error); // print error;
         });
-
-  res.end();
 };
 
 exports.deleteUserCalorie = function(args, res, next) {
@@ -121,16 +120,15 @@ exports.deleteUserCalorie = function(args, res, next) {
   **/
   // no response value expected for this operation
 
-    var calorieId = args.calorieId;
-    db.none("update calories set delete=TRUE where calorie_id=$1", calorieId)
+    var calorieId = args.calorieId.value;
+    db.none("update calories set deleted=TRUE where calorie_id=$1", calorieId)
         .then(function () {
             // success;
+            res.end();
         })
         .catch(function (error) {
             console.log("ERROR:", error); // print error;
         });
-
-  res.end();
 };
 
 exports.getUser = function(args, res, next) {
