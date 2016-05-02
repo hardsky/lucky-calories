@@ -92,9 +92,10 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
         //last month, from 12:00 to 15:00
 
         Calendar cl = Calendar.getInstance();
+        cl.add(Calendar.DAY_OF_YEAR, 1);
         filterModel.setToDate(cl.getTime());
 
-        cl.add(Calendar.MONTH, -1);
+        cl.add(Calendar.DAY_OF_YEAR, -30);
         filterModel.setFromDate(cl.getTime());
 
         cl.set(Calendar.HOUR_OF_DAY, 12);
