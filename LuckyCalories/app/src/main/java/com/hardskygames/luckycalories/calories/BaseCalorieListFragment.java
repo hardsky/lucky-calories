@@ -12,7 +12,6 @@ import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
 import com.hardskygames.luckycalories.calories.models.CalorieModel;
 import com.hardskygames.luckycalories.calories.models.DailyCalorie;
-import com.hardskygames.luckycalories.calories.models.IColorSubscriber;
 import com.hardskygames.luckycalories.calories.models.OrderingCalorie;
 import com.mobandme.android.transformer.Transformer;
 
@@ -50,9 +49,6 @@ public class BaseCalorieListFragment extends BaseFragment {
     protected Transformer caloriesTransformer = new Transformer
             .Builder()
             .build(io.swagger.client.model.Calorie.class);
-
-    protected int calorieAlertLevel;
-
 
     public BaseCalorieListFragment() {
         // Required empty public constructor
@@ -121,12 +117,15 @@ public class BaseCalorieListFragment extends BaseFragment {
 
     protected void onPageLoaded(List<io.swagger.client.model.Calorie> list){
         if(list != null && !list.isEmpty()) {
+            if(lastDate != 0 && list.get(list.size() - 1).getEatTime() >= lastDate)
+                return;
+
             int entryCount = adapter.getItemCount();
 
             for (io.swagger.client.model.Calorie respCl : list) {
                 CalorieModel calorie = caloriesTransformer.transform(respCl, CalorieModel.class);
                 if(!dailies.containsKey(calorie.getEatDate())){
-                    DailyCalorie dailyCalorie = new DailyCalorie(calorieAlertLevel);
+                    DailyCalorie dailyCalorie = new DailyCalorie();
                     dailyCalorie.setDate(calorie.getEatDate());
 
                     dailies.put(dailyCalorie.getDate(), dailyCalorie);
@@ -199,20 +198,17 @@ public class BaseCalorieListFragment extends BaseFragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if(viewType == MEAL_ITEM){
-                return onCreateMealViewHolder(parent, viewType);
+                View v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.view_calorie_item, parent, false);
+                return new MealItemViewHolder(v);
             }
             else{
                 View v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.view_calorie_daily, parent, false);
-                return new DayItemViewHolder(v);
+                return new BaseDayItemViewHolder(v);
             }
         }
 
-        protected RecyclerView.ViewHolder onCreateMealViewHolder(ViewGroup parent, int viewType){
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.view_calorie_item, parent, false);
-            return new MealItemViewHolder(v);
-        }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -221,17 +217,13 @@ public class BaseCalorieListFragment extends BaseFragment {
                 return;
 
             if(getItemViewType(position) == MEAL_ITEM){
-                onBindMealViewHolder(holder, position);
+                MealItemViewHolder viewHolder = (MealItemViewHolder) holder;
+                viewHolder.setData(getCalorie(position));
             }
             else{
-                DayItemViewHolder viewHolder = (DayItemViewHolder) holder;
+                BaseDayItemViewHolder viewHolder = (BaseDayItemViewHolder) holder;
                 viewHolder.setData(getDaily(position));
             }
-        }
-
-        protected void onBindMealViewHolder(RecyclerView.ViewHolder holder, int position){
-            MealItemViewHolder viewHolder = (MealItemViewHolder) holder;
-            viewHolder.setData(getCalorie(position));
         }
 
         @Override
@@ -241,14 +233,14 @@ public class BaseCalorieListFragment extends BaseFragment {
 
     }
 
-    protected class DayItemViewHolder extends RecyclerView.ViewHolder implements IColorSubscriber {
+    protected class BaseDayItemViewHolder extends RecyclerView.ViewHolder {
 
         public TextView txtDate;
         public TextView txtTotal;
 
         private DailyCalorie daily;
 
-        public DayItemViewHolder(View itemView) {
+        public BaseDayItemViewHolder(View itemView) {
             super(itemView);
 
             txtDate = ButterKnife.findById(itemView, R.id.txtDate);
@@ -262,22 +254,18 @@ public class BaseCalorieListFragment extends BaseFragment {
 
             txtDate.setText(timeFormat.format(data.getDate()));
             txtTotal.setText(String.format(Locale.US, "%d kcal", data.getTotal()));
-
-            data.register(this);
         }
 
-        @Override
-        public void notifyGreen() {
+        public void drawGreen() {
             itemView.setBackgroundResource(R.color.md_green_400);
         }
 
-        @Override
-        public void notifyRed() {
+        public void drawRed() {
             itemView.setBackgroundResource(R.color.md_red_400);
         }
     }
 
-    protected class MealItemViewHolder extends RecyclerView.ViewHolder implements IColorSubscriber {
+    protected class MealItemViewHolder extends RecyclerView.ViewHolder {
 
         public TextView txtMeal;
         public TextView txtKCal;
@@ -293,13 +281,10 @@ public class BaseCalorieListFragment extends BaseFragment {
             txtKCal = ButterKnife.findById(itemView, R.id.txtKCal);
             txtTime = ButterKnife.findById(itemView, R.id.txtTime);
             txtComment = ButterKnife.findById(itemView, R.id.txtComment);
-
-            notifyGreen();
         }
 
         public void setData(CalorieModel data) {
             DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            //DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 
             this.calorie = data;
 
@@ -307,21 +292,17 @@ public class BaseCalorieListFragment extends BaseFragment {
             txtKCal.setText(String.format(Locale.US, "%d", calorie.getAmount()));
             txtTime.setText(timeFormat.format(calorie.getEatTime()));
             txtComment.setText(calorie.getNote());
-
-            data.register(this);
         }
 
         public CalorieModel getData(){
             return calorie;
         }
 
-        @Override
-        public void notifyGreen() {
+        public void drawGreen() {
             itemView.setBackgroundResource(R.color.md_green_400);
         }
 
-        @Override
-        public void notifyRed() {
+        public void drawRed() {
             itemView.setBackgroundResource(R.color.md_red_400);
         }
     }

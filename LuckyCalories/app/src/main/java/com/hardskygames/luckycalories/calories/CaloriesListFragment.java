@@ -56,15 +56,16 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
 
 
     private LinearLayoutManager layoutManager;
-    private CaloriesAdapter adapter;
     private EndlessRecyclerOnScrollListener scrollListener;
+
+    private ColorMaster colorMaster = new ColorMaster();
 
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
             new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
                 @Override
                 public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                    if(viewHolder instanceof DayItemViewHolder)
+                    if(viewHolder instanceof BaseDayItemViewHolder)
                         return 0;
 
                     return super.getSwipeDirs(recyclerView, viewHolder);
@@ -127,9 +128,12 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
         View layout = inflater.inflate(R.layout.fragment_calories_list, container, false);
         ButterKnife.bind(this, layout);
 
-        calorieAlertLevel = user.getDailyCalories();
         layoutManager = new LinearLayoutManager(getActivity());
         listLayout.setLayoutManager(layoutManager);
+
+        lastDate = 0;
+        calories.clear();
+        dailies.clear();
 
         adapter = new CaloriesAdapter();
         listLayout.setAdapter(adapter);
@@ -187,7 +191,7 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
         if(calorieModel.getId() == 0L){//create
 
             if(!dailies.containsKey(calorieModel.getEatDate())){ //add item + sub-header
-                DailyCalorie dailyCalorie = new DailyCalorie(user.getDailyCalories());
+                DailyCalorie dailyCalorie = new DailyCalorie();
                 dailyCalorie.setDate(calorieModel.getEatDate());
                 dailyCalorie.add(calorieModel);
 
@@ -247,7 +251,7 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
             else{
                 dailies.get(getDate(ev.origEatTime)).remove(calorieModel);
                 if(!dailies.containsKey(calorieModel.getEatDate())){ //add item + sub-header
-                    DailyCalorie dailyCalorie = new DailyCalorie(user.getDailyCalories());
+                    DailyCalorie dailyCalorie = new DailyCalorie();
                     dailyCalorie.setDate(calorieModel.getEatDate());
                     dailyCalorie.add(calorieModel);
 
@@ -298,27 +302,7 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
             @Override
             public void onResponse(Call<List<io.swagger.client.model.Calorie>> call, Response<List<io.swagger.client.model.Calorie>> response) {
                 if(response.isSuccessful()) {
-                    List<io.swagger.client.model.Calorie> list = response.body();
-                    if (list != null && !list.isEmpty()) {
-                        int entryCount = adapter.getItemCount();
-
-                        for (io.swagger.client.model.Calorie respCl : list) {
-                            CalorieModel calorie = caloriesTransformer.transform(respCl, CalorieModel.class);
-                            if (!dailies.containsKey(calorie.getEatDate())) {
-                                DailyCalorie dailyCalorie = new DailyCalorie(user.getDailyCalories());
-                                dailyCalorie.setDate(calorie.getEatDate());
-
-                                dailies.put(dailyCalorie.getDate(), dailyCalorie);
-                            }
-
-                            dailies.get(calorie.getEatDate()).add(calorie);
-                            calories.put(calorie.getEatDate(), calorie);
-                        }
-
-
-                        lastDate = list.get(list.size() - 1).getEatTime();
-                        adapter.notifyItemRangeInserted(entryCount, list.size());
-                    }
+                    onPageLoaded(response.body());
                 }
                 else{
                     Timber.e("Error on request calories list: %s", response.errorBody());
@@ -340,10 +324,49 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
     private class CaloriesAdapter extends BaseCaloriesAdapter {
 
         @Override
-        protected RecyclerView.ViewHolder onCreateMealViewHolder(ViewGroup parent, int viewType){
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.view_calorie_item, parent, false);
-            return new MealItemClickableViewHolder(v);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if(viewType == MEAL_ITEM){
+                View v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.view_calorie_item, parent, false);
+                return new MealItemClickableViewHolder(v);
+            }
+            else{
+                View v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.view_calorie_daily, parent, false);
+                return new DayItemViewHolder(v);
+            }
+        }
+    }
+
+    private class ColorMaster{
+
+        public int getColor(CalorieModel model){
+            return getColor(dailies.get(model.getEatDate()).getTotal());
+        }
+
+        public int getColor(DailyCalorie model){
+            return getColor(model.getTotal());
+        }
+
+        private int getColor(int dayTotal){
+            if(dayTotal < user.getDailyCalories())
+                return R.color.md_green_400;
+            else
+                return R.color.md_red_400;
+        }
+    }
+
+    private class DayItemViewHolder extends BaseDayItemViewHolder{
+
+        public DayItemViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void setData(DailyCalorie data) {
+            super.setData(data);
+
+            itemView.setBackgroundResource(colorMaster.getColor(data));
         }
     }
 
@@ -364,6 +387,14 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
 
             return true;
         }
+
+        @Override
+        public void setData(CalorieModel data) {
+            super.setData(data);
+
+            itemView.setBackgroundResource(colorMaster.getColor(data));
+        }
+
     }
 
 }

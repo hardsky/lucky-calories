@@ -17,12 +17,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.hardskygames.luckycalories.R;
+import com.hardskygames.luckycalories.calories.models.FilterModel;
 import com.hardskygames.luckycalories.common.DatePickerFragment;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
 import com.hardskygames.luckycalories.common.TimePickerFragment;
-import com.hardskygames.luckycalories.calories.models.CalorieModel;
-import com.hardskygames.luckycalories.calories.models.DailyCalorie;
-import com.hardskygames.luckycalories.calories.models.FilterModel;
 import com.hardskygames.luckycalories.users.models.UserModel;
 import com.mobandme.android.transformer.Transformer;
 import com.squareup.otto.Bus;
@@ -79,7 +77,6 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
     TextView txtToTime;
 
     private LinearLayoutManager layoutManager;
-    private BaseCalorieListFragment.BaseCaloriesAdapter adapter;
     private EndlessRecyclerOnScrollListener scrollListener;
 
     FilterModel filterModel;
@@ -173,12 +170,9 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
         requestParams.toTime = filterModel.getToTime().getTime();
 
         lastDate = 0;
-
-        int removed = calories.size();
         dailies.clear();
         calories.clear();
 
-        //adapter.notifyItemRangeRemoved(0, removed);
         adapter.notifyDataSetChanged();
 
         loadPage();
@@ -192,9 +186,12 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
 
         ButterKnife.bind(this, layout);
 
-        calorieAlertLevel = user.getDailyCalories();
         layoutManager = new LinearLayoutManager(getActivity());
         listLayout.setLayoutManager(layoutManager);
+
+        lastDate = 0;
+        calories.clear();
+        dailies.clear();
 
         adapter = new BaseCaloriesAdapter();
         listLayout.setAdapter(adapter);
@@ -253,25 +250,11 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
         callList.enqueue(new Callback<List<Calorie>>() {
             @Override
             public void onResponse(Call<List<Calorie>> call, Response<List<Calorie>> response) {
-                List<io.swagger.client.model.Calorie> list =  response.body();
-                if(list != null && !list.isEmpty()) {
-                    int entryCount = adapter.getItemCount();
-
-                    for (io.swagger.client.model.Calorie respCl : list) {
-                        CalorieModel calorie = caloriesTransformer.transform(respCl, CalorieModel.class);
-                        if(!dailies.containsKey(calorie.getEatDate())){
-                            DailyCalorie dailyCalorie = new DailyCalorie(user.getDailyCalories());
-                            dailyCalorie.setDate(calorie.getEatDate());
-
-                            dailies.put(dailyCalorie.getDate(), dailyCalorie);
-                        }
-
-                        dailies.get(calorie.getEatDate()).add(calorie);
-                        calories.put(calorie.getEatDate(), calorie);
-                    }
-
-                    lastDate = list.get(list.size() - 1).getEatTime();
-                    adapter.notifyItemRangeInserted(entryCount, list.size());
+                if(response.isSuccessful()) {
+                    onPageLoaded(response.body());
+                }
+                else{
+                    Timber.e("Error on request calories list: %s", response.errorBody());
                 }
 
                 listLayout.addOnScrollListener(scrollListener);
@@ -286,6 +269,5 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
             }
         });
     }
-
 
 }
