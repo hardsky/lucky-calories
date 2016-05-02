@@ -206,11 +206,13 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
             else{ //add item
                 DailyCalorie dailyCalorie = dailies.get(calorieModel.getEatDate());
                 dailyCalorie.add(calorieModel);
-                int dailyPos = getSubHeaderPosition(calorieModel.getEatDate());
 
                 calories.put(calorieModel.getEatDate(), calorieModel);
                 adapter.notifyItemInserted(getCaloriePosition(calorieModel));
-                adapter.notifyItemChanged(dailyPos);
+
+                int dailyPos = getSubHeaderPosition(calorieModel.getEatDate());
+                int count = calories.get(calorieModel.getEatDate()).size() + 1; //calories + sub-header
+                adapter.notifyItemRangeChanged(dailyPos, count);
             }
 
             //lastDate for get paged list of calories
