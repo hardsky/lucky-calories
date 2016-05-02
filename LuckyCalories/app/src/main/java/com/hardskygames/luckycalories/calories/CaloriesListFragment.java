@@ -165,6 +165,7 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        adapter.notifyDataSetChanged();
         addScrollListener();
         bus.register(this);
     }
