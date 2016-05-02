@@ -21,6 +21,7 @@ public class SignUpInfo implements Serializable {
     @SerializedName("email")
     private String email = null;
 
+    @Mapped
     @SerializedName("password")
     private String password = null;
 
