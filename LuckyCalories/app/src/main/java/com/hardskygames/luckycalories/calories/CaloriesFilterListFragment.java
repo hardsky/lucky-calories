@@ -27,6 +27,7 @@ import com.squareup.otto.Bus;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
     private LinearLayoutManager layoutManager;
     private EndlessRecyclerOnScrollListener scrollListener;
 
-    FilterModel filterModel;
+    FilterModel filterModel = new FilterModel();
     RequestParams requestParams;
 
     private static final String dateFormat = "dd/MM/yyyy";
@@ -87,6 +88,22 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
 
     public CaloriesFilterListFragment() {
         // Required empty public constructor
+
+        //last month, from 12:00 to 15:00
+
+        Calendar cl = Calendar.getInstance();
+        filterModel.setToDate(cl.getTime());
+
+        cl.add(Calendar.MONTH, -1);
+        filterModel.setFromDate(cl.getTime());
+
+        cl.set(Calendar.HOUR_OF_DAY, 12);
+        cl.set(Calendar.MINUTE, 0);
+        cl.set(Calendar.SECOND, 0);
+        filterModel.setFromTime(cl.getTime());
+
+        cl.set(Calendar.HOUR_OF_DAY, 15);
+        filterModel.setToTime(cl.getTime());
     }
 
 
@@ -207,6 +224,13 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
             }
         };
 
+        txtFromDate.setText(new SimpleDateFormat(dateFormat).format(filterModel.getFromDate()));
+        txtToDate.setText(new SimpleDateFormat(dateFormat).format(filterModel.getToDate()));
+        txtFromTime.setText(new SimpleDateFormat(timeFormat).format(filterModel.getFromTime()));
+        txtToTime.setText(new SimpleDateFormat(timeFormat).format(filterModel.getToTime()));
+
+        applyFilter();
+
         return layout;
     }
 
@@ -219,8 +243,6 @@ public class CaloriesFilterListFragment extends BaseCalorieListFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        filterModel = new FilterModel();
 
         listLayout.addOnScrollListener(scrollListener);
         bus.register(this);
