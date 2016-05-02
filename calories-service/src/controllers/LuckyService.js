@@ -19,12 +19,13 @@ exports.createUser = function(args, res, next) {
   * user (User)
    **/
 
-    db.one("insert into users(user_name, email, user_type, daily_calories) values(${name}, ${email}, ${dailyCalories}, ${userType}) returning user_id", args.user)
+    var user = _.assign({}, args.user.value);
+    db.one("insert into users(user_name, email, user_type, daily_calories) values(${name}, ${email}, ${userType}, ${dailyCalories}) returning user_id", user)
         .then(function (data) {
-            args.user.id = data.user_id;
+            user.id = data.user_id;
 
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(args.user, null, 2));
+            res.end(JSON.stringify(user, null, 2));
             console.log(data.user_id); // print new user id;
         })
         .catch(function (error) {
