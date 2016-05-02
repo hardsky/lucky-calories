@@ -16,5 +16,9 @@
     "lodash": "^4.11.1",
     "pg-promise": "^4.0.4",
     "swagger-tools": "0.9.*"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1"
   }
 }
