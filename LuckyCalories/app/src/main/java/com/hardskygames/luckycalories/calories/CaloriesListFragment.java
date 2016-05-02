@@ -106,11 +106,13 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
                         adapter.notifyItemRangeRemoved(position - 1, 2);
                     }
                     else{ //remove item
-                        int dailyPos = getSubHeaderPosition(eatDate);
                         dailies.get(eatDate).remove(model);
                         calories.remove(eatDate, model);
-                        adapter.notifyItemChanged(dailyPos);
                         adapter.notifyItemRemoved(position);
+
+                        int dailyPos = getSubHeaderPosition(eatDate);
+                        int count = calories.get(eatDate).size() + 1; //calories + sub-header
+                        adapter.notifyItemRangeChanged(dailyPos, count);
                     }
 
                 }
