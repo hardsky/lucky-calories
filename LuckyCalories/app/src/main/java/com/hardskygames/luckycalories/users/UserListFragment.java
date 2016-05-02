@@ -305,7 +305,7 @@ public class UserListFragment extends BaseFragment {
 
             txtName.setText(data.getName());
             txtEmail.setText(data.getEmail());
-            txtDailyCalorie.setText(String.format("%.2f", data.getDailyCalories()));
+            txtDailyCalorie.setText(String.format("%d", data.getDailyCalories()));
 
             btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override

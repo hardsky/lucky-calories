@@ -71,7 +71,7 @@ public class EditUserFragment extends DialogFragment implements Toolbar.OnMenuIt
         if(model.getId() > 0) { //existed value; edit mode
             txtName.setText(model.getName());
             txtEmail.setText(model.getEmail());
-            txtDailyCalories.setText(String.format("%.2f", model.getDailyCalories()));
+            txtDailyCalories.setText(String.format("%d", model.getDailyCalories()));
         }
 
         return layout;
