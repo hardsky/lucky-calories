@@ -16,8 +16,10 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.BaseFragment;
 import com.hardskygames.luckycalories.R;
+import com.hardskygames.luckycalories.admin.AdminActivity;
 import com.hardskygames.luckycalories.common.EndlessRecyclerOnScrollListener;
 import com.hardskygames.luckycalories.main.MainActivity;
 import com.hardskygames.luckycalories.users.models.AdminContext;
@@ -194,6 +196,7 @@ public class UserListFragment extends BaseFragment {
     private void openUserEditDlg(UserModel model){
         FragmentManager fm = getActivity().getSupportFragmentManager();
         EditUserFragment editUserFragment = new EditUserFragment();
+        ((BaseActivity)getActivity()).inject(editUserFragment);
         if(model != null){
             editUserFragment.setModel(model);
             editUserFragment.setIndex(usersList.indexOf(model));

@@ -455,7 +455,7 @@ exports.updateUser = function(args, res, next) {
   **/
 
     var user = _.assign({}, args.user.value);
-    db.none("update users set user_name=${name}, daily_calories=${dailyCalories}  where user_id=${id}", user)
+    db.none("update users set user_name=${name}, daily_calories=${dailyCalories}, user_type=${userType}  where user_id=${id}", user)
         .then(function () {
             // success;
             res.setHeader('Content-Type', 'application/json');

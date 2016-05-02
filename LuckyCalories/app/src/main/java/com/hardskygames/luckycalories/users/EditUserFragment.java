@@ -10,12 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.hardskygames.luckycalories.BaseActivity;
 import com.hardskygames.luckycalories.R;
-import com.hardskygames.luckycalories.users.models.UserModel;
 import com.hardskygames.luckycalories.users.events.EditUserEvent;
+import com.hardskygames.luckycalories.users.models.UserModel;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -31,6 +34,8 @@ public class EditUserFragment extends DialogFragment implements Toolbar.OnMenuIt
 
     @Inject
     Bus bus;
+    @Inject
+    UserModel user;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -41,6 +46,8 @@ public class EditUserFragment extends DialogFragment implements Toolbar.OnMenuIt
     EditText txtEmail;
     @Bind(R.id.txtDailyCalories)
     EditText txtDailyCalories;
+    @Bind(R.id.spinnerUserType)
+    Spinner spinnerUserType;
 
     UserModel model = new UserModel();
     private int position;
@@ -68,10 +75,35 @@ public class EditUserFragment extends DialogFragment implements Toolbar.OnMenuIt
             }
         });
 
+        spinnerUserType.setVisibility(user.isAdmin() ? View.VISIBLE: View.INVISIBLE);
+
         if(model.getId() > 0) { //existed value; edit mode
             txtName.setText(model.getName());
             txtEmail.setText(model.getEmail());
             txtDailyCalories.setText(String.format("%d", model.getDailyCalories()));
+        }
+
+        if(user.isAdmin()){
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                    R.array.user_types, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerUserType.setAdapter(adapter);
+
+            if(model.getId() > 0) { //existed value; edit mode
+                spinnerUserType.setSelection(model.getUserType() - 1);
+            }
+
+            spinnerUserType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    model.setUserType(position + 1);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
 
         return layout;
@@ -93,7 +125,7 @@ public class EditUserFragment extends DialogFragment implements Toolbar.OnMenuIt
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         // Call super onResume after sizing
         super.onResume();
-        ((BaseActivity) getActivity()).inject(this);
+        //((BaseActivity) getActivity()).inject(this);
         bus.register(this);
     }
 
