@@ -97,7 +97,7 @@ public class BaseCalorieListFragment extends BaseFragment {
         cl1.setTime(prev);
 
         Calendar cl2 = Calendar.getInstance();
-        cl1.setTime(changed);
+        cl2.setTime(changed);
 
         return cl1.get(Calendar.YEAR) == cl2.get(Calendar.YEAR)
                 && cl1.get(Calendar.MONTH) == cl2.get(Calendar.MONTH)

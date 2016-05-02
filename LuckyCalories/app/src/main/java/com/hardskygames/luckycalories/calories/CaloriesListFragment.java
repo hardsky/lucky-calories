@@ -115,6 +115,8 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
                         adapter.notifyItemRangeChanged(dailyPos, count);
                     }
 
+                    lastDate = calories.isEmpty() ? 0
+                            : calories.get(dailies.lastKey()).first().getEatTime().getTime();
                 }
             }
     );
@@ -246,14 +248,18 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
         else{//update
 
             if(isSameDate(ev.origEatTime, calorieModel.getEatTime())){
-                int caloriePosition = getCaloriePosition(calorieModel);
-                int dailyPosition = getSubHeaderPosition(calorieModel.getEatDate());
+
                 dailies.get(calorieModel.getEatDate()).change();
-                adapter.notifyItemChanged(caloriePosition);
-                adapter.notifyItemChanged(dailyPosition);
+                int dailyPos = getSubHeaderPosition(calorieModel.getEatDate());
+                int count = calories.get(calorieModel.getEatDate()).size() + 1; //calories + sub-header
+                adapter.notifyItemRangeChanged(dailyPos, count);
             }
             else{
                 dailies.get(getDate(ev.origEatTime)).remove(calorieModel);
+                int prevDailyPos = getSubHeaderPosition(ev.origEatTime);
+                int prevcount = calories.get(calorieModel.getEatDate()).size() + 1; //calories + sub-header
+                adapter.notifyItemRangeChanged(prevDailyPos, prevcount);
+
                 if(!dailies.containsKey(calorieModel.getEatDate())){ //add item + sub-header
                     DailyCalorie dailyCalorie = new DailyCalorie();
                     dailyCalorie.setDate(calorieModel.getEatDate());
@@ -262,20 +268,22 @@ public class CaloriesListFragment extends BaseCalorieListFragment {
                     dailies.put(dailyCalorie.getDate(), dailyCalorie);
                     calories.put(dailyCalorie.getDate(), calorieModel);
                     int dailyPosition = getSubHeaderPosition(dailyCalorie);
-
                     adapter.notifyItemRangeInserted(dailyPosition, 2);
                 }
                 else{ //add item
                     DailyCalorie dailyCalorie = dailies.get(calorieModel.getEatDate());
-                    int prevTotal = dailyCalorie.getTotal();
-                    dailies.get(calorieModel.getEatDate()).add(calorieModel);
+                    dailyCalorie.add(calorieModel);
                     calories.put(calorieModel.getEatDate(), calorieModel);
-                    adapter.notifyItemChanged(getSubHeaderPosition(calorieModel.getEatDate()));
                     adapter.notifyItemInserted(getCaloriePosition(calorieModel));
-                }
 
-                lastDate = calories.get(dailies.lastKey()).first().getEatTime().getTime();
+                    int dailyPos = getSubHeaderPosition(calorieModel.getEatDate());
+                    int count = calories.get(calorieModel.getEatDate()).size() + 1; //calories + sub-header
+                    adapter.notifyItemRangeChanged(dailyPos, count);
+                }
             }
+
+            lastDate = calories.get(dailies.lastKey()).first().getEatTime().getTime();
+
 
             Call<Calorie> calorieCall = api.updateUserCalorie(user.getId(), caloriesTransformer.transform(calorieModel, Calorie.class));
             calorieCall.enqueue(new Callback<Calorie>() {
