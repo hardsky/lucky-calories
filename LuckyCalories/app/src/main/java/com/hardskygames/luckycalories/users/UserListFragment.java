@@ -317,6 +317,19 @@ public class UserListFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     usersList.remove(userModel);
+                    api.deleteUser(userModel.getId()).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(!response.isSuccessful()){
+                                Timber.e("Error on delete user: %s", response.errorBody());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Timber.e(t, "Error on delete user.");
+                        }
+                    });
                 }
             });
 
